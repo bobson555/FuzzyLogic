@@ -1,0 +1,5 @@
+c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\obj\Debug\FuzzySets.csprojResolveAssemblyReference.cache
+c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\bin\Debug\FuzzySets.dll
+c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\bin\Debug\FuzzySets.pdb
+c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\obj\Debug\FuzzySets.dll
+c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\obj\Debug\FuzzySets.pdb
