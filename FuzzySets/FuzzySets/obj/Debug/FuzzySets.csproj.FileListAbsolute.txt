@@ -3,3 +3,8 @@ c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\bin\
 c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\bin\Debug\FuzzySets.pdb
 c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\obj\Debug\FuzzySets.dll
 c:\users\błażej\documents\visual studio 2012\Projects\FuzzySets\FuzzySets\obj\Debug\FuzzySets.pdb
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\bin\Debug\FuzzySets.dll
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\bin\Debug\FuzzySets.pdb
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\obj\Debug\FuzzySets.csprojResolveAssemblyReference.cache
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\obj\Debug\FuzzySets.dll
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\obj\Debug\FuzzySets.pdb

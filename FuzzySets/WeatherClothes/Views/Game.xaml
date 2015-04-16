@@ -1,0 +1,90 @@
+﻿<Window x:Class="WeatherClothes.Views.Game"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:l ="clr-namespace:WeatherClothes"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="Game" Height="500" Width="400" Background="AliceBlue" MinHeight="400" MinWidth="500">
+    <Window.Resources>
+        <l:HalfValueConverter x:Key="HalfValueConverter"/>
+        
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Grid>
+                                <Ellipse Fill="LightGreen"  Stretch="Fill" Stroke="LavenderBlush" HorizontalAlignment="Stretch"/>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+
+            </Style>
+        <Style x:Key="TextStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="ExtraBold"/>
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+            <Canvas x:Name="Canvas1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+            <Rectangle Fill="LavenderBlush" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas1, Path=ActualHeight}" Width="{Binding ElementName=Canvas1, Path=ActualWidth}"/>
+            <StackPanel Orientation="Vertical">
+                <Border BorderBrush="{x:Null}" >
+                <TextBlock x:Name="TextBlock1" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas1}" >
+                
+                </TextBlock>
+            </Border>
+                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-20" FormatString="D0" Value="0" Maximum="30" Width="100" >
+                    
+                </l:TemperatureUpDown>
+            </StackPanel>
+        </Canvas>
+        <Canvas x:Name="Canvas2" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+            <Rectangle Fill="GreenYellow" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas1, Path=ActualHeight}" Width="{Binding ElementName=Canvas2, Path=ActualWidth}"/>
+            <StackPanel Orientation="Vertical">
+                <Border BorderBrush="{x:Null}" >
+                    <TextBlock x:Name="TextBlock2" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas2}" >
+
+                    </TextBlock>
+                </Border>
+                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="0" Maximum="20" Width="100" >
+
+                </l:SpeedUpDown>
+            </StackPanel>
+        </Canvas>
+    
+    <Canvas x:Name="Canvas3" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+        <Rectangle Fill="Aquamarine" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas3, Path=ActualHeight}" Width="{Binding ElementName=Canvas1, Path=ActualWidth}"/>
+        <StackPanel Orientation="Vertical">
+            <Border BorderBrush="{x:Null}" >
+                    <TextBlock x:Name="TextBlock3" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas3}" >
+
+                </TextBlock>
+            </Border>
+            <xctk:IntegerUpDown x:Name="Iupdown3" FormatString="P0" Value="0" Minimum="0" Maximum="100" Width="100" >
+
+            </xctk:IntegerUpDown>
+        </StackPanel>
+    </Canvas>
+        <Button Grid.Row=" 3" FontFamily="Century Gothic" FontWeight="ExtraBold" Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Column="2" Grid.ColumnSpan="2">
+            Analizuj
+        </Button>
+    </Grid>
+</Window>
