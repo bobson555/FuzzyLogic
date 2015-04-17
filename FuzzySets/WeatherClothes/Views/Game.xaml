@@ -78,9 +78,9 @@
 
                 </TextBlock>
             </Border>
-            <xctk:IntegerUpDown x:Name="Iupdown3" FormatString="P0" Value="0" Minimum="0" Maximum="100" Width="100" >
+            <xctk:DoubleUpDown x:Name="Iupdown3" FormatString="P0" Value="0" Minimum="0" Maximum="1" Width="100" Increment=".01">
 
-            </xctk:IntegerUpDown>
+            </xctk:DoubleUpDown>
         </StackPanel>
     </Canvas>
         <Button Grid.Row=" 3" FontFamily="Century Gothic" FontWeight="ExtraBold" Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Column="2" Grid.ColumnSpan="2">
