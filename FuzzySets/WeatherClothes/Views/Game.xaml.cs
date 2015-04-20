@@ -26,10 +26,7 @@ namespace WeatherClothes.Views
         Attribute Clothes;
         int[, ,] Rules;
 
-
-
-
-
+        #region DependecyProperties
         public double TemperatureDP
         {
             get { return (double)GetValue(TemperatureDPProperty); }
@@ -39,8 +36,6 @@ namespace WeatherClothes.Views
         // Using a DependencyProperty as the backing store for TemperatureDP.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TemperatureDPProperty =
             DependencyProperty.Register("TemperatureDP", typeof(double), typeof(Game));
-
-
 
         public double MoistureDP
         {
@@ -52,8 +47,6 @@ namespace WeatherClothes.Views
         public static readonly DependencyProperty MoistureDPProperty =
             DependencyProperty.Register("MoistureDP", typeof(double), typeof(Game));
 
-
-
         public double WindSpeedDP
         {
             get { return (double)GetValue(WindSpeedDPProperty); }
@@ -64,11 +57,7 @@ namespace WeatherClothes.Views
         public static readonly DependencyProperty WindSpeedDPProperty =
             DependencyProperty.Register("WindSpeedDP", typeof(double), typeof(Game));
 
-        
-
-
-        
-
+        #endregion
 
         public Game()
         {
@@ -127,17 +116,27 @@ namespace WeatherClothes.Views
 
             var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
 
-            var RuleValues = CalculateRuleValues(input);
+            //TODO: wykonać następne kroki 4 razy, po jednym na każdą normę
+            var RuleValueSets = CalculateRuleValues(input);
+            /*
+             * TODO: Wygeneruj zbiór wyjściowy:
+             * 1. Oblicz przecięcie każdego zbioru w RuleValueSets w obrębie tej samej wartości w tablicy Rules
+             * 2. Oblicz przecięcie powstałych trzech zbiorów z odpowiednimi zbiorami w obrębie atrybutu Clothes
+             * 3. Zsumuj otrzymane trzy zbiory w jeden zbiór ClothesResult
+             * 4. Zastosuj metodę centroidu do znalezienia pojedynczej wartości ClothesResult
+             * 5. Zinterpretuj wynik (proponowana metoda: znajdź zbiór dla którego FLV(znaleziona wartość) przyjmuje max)
+             * 6. Wyświetla wynik
+             */
         }
 
-        private double[,,] CalculateRuleValues(double[][] input, Norm norm=Norm.Zadeh)
+        private FuzzySet[,,] CalculateRuleValues(double[][] input, Norm norm=Norm.Zadeh)
         {
-            var result = new double[3, 3, 3];
+            var result = new FuzzySet[3, 3, 3];
             for(int tInd=0; tInd<3; tInd++)
                 for(int mInd=0; mInd<3; mInd++)
                     for (int wInd = 0; wInd < 3; wInd++)
                     {
-                        result[wInd, mInd, tInd] = Norms.ApplyTNorm(Norms.ApplyTNorm(Temperature.GetAttributeValue(tInd, input[0][tInd]), Moisture.GetAttributeValue(mInd, input[1][mInd])), WindSpeed.GetAttributeValue(wInd, input[2][wInd]), norm);
+                        result[wInd, mInd, tInd] = new FuzzySet(Norms.ApplyTNorm(Norms.ApplyTNorm(Temperature.GetAttributeValue(tInd, input[0][tInd]), Moisture.GetAttributeValue(mInd, input[1][mInd])), WindSpeed.GetAttributeValue(wInd, input[2][wInd]), norm));
                     }
             return result;
         }
