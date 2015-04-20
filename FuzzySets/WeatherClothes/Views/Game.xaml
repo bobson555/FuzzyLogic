@@ -83,7 +83,7 @@
             </xctk:DoubleUpDown>
         </StackPanel>
     </Canvas>
-        <Button Grid.Row=" 3" FontFamily="Century Gothic" FontWeight="ExtraBold" Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Column="2" Grid.ColumnSpan="2">
+        <Button Grid.Row=" 3" FontFamily="Century Gothic" FontWeight="ExtraBold" Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Column="2" Grid.ColumnSpan="2" Click="Analyze_Click">
             Analizuj
         </Button>
     </Grid>

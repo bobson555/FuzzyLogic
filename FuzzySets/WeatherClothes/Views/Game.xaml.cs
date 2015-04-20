@@ -21,9 +21,54 @@ namespace WeatherClothes.Views
     public partial class Game : Window
     {
         Attribute Temperature;
-        Attribute WindSpeed;
         Attribute Moisture;
+        Attribute WindSpeed;
         Attribute Clothes;
+        int[, ,] Rules;
+
+
+
+
+
+        public double TemperatureDP
+        {
+            get { return (double)GetValue(TemperatureDPProperty); }
+            set { SetValue(TemperatureDPProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TemperatureDP.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TemperatureDPProperty =
+            DependencyProperty.Register("TemperatureDP", typeof(double), typeof(Game));
+
+
+
+        public double MoistureDP
+        {
+            get { return (double)GetValue(MoistureDPProperty); }
+            set { SetValue(MoistureDPProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MoistureDP.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MoistureDPProperty =
+            DependencyProperty.Register("MoistureDP", typeof(double), typeof(Game));
+
+
+
+        public double WindSpeedDP
+        {
+            get { return (double)GetValue(WindSpeedDPProperty); }
+            set { SetValue(WindSpeedDPProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for WindSpeedDP.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty WindSpeedDPProperty =
+            DependencyProperty.Register("WindSpeedDP", typeof(double), typeof(Game));
+
+        
+
+
+        
+
 
         public Game()
         {
@@ -31,7 +76,11 @@ namespace WeatherClothes.Views
             TextBlock1.Text = "Temperatura\notoczenia";
             TextBlock2.Text = "Prędkość\nwiatru";
             TextBlock3.Text = "Wilgotność\npowietrza";
+            InitializeAttributes();
+        }
 
+        private void InitializeAttributes()
+        {
             var temperatureList = new List<String> { "Cold", "Warm", "Hot" };
             var windSpeedList = new List<String> { "None", "Mild", "Strong" };
             var moistureList = new List<String> { "Dry", "Wet", "Rain" };
@@ -61,6 +110,36 @@ namespace WeatherClothes.Views
             WindSpeed = new Attribute(windSpeedList, windSets);
             Moisture = new Attribute(moistureList, moistureSets);
             Clothes = new Attribute(clothesList, clothesSets);
+
+            Rules = new int[,,]
+            {
+                {{1,2,2},{0,1,2},{0,1,1}},
+                {{1,2,2},{0,0,1},{0,0,1}},
+                {{0,0,1},{0,1,1},{0,1,2}}
+            };
+        }
+
+        private void Analyze_Click(object sender, RoutedEventArgs e)
+        {
+            var temperatureArr = Temperature[TemperatureDP];
+            var moistureArr = Moisture[MoistureDP];
+            var windSpeedArr = WindSpeed[WindSpeedDP];
+
+            var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
+
+            var RuleValues = CalculateRuleValues(input);
+        }
+
+        private double[,,] CalculateRuleValues(double[][] input, Norm norm=Norm.Zadeh)
+        {
+            var result = new double[3, 3, 3];
+            for(int tInd=0; tInd<3; tInd++)
+                for(int mInd=0; mInd<3; mInd++)
+                    for (int wInd = 0; wInd < 3; wInd++)
+                    {
+                        result[wInd, mInd, tInd] = Norms.ApplyTNorm(Norms.ApplyTNorm(Temperature.GetAttributeValue(tInd, input[0][tInd]), Moisture.GetAttributeValue(mInd, input[1][mInd])), WindSpeed.GetAttributeValue(wInd, input[2][wInd]), norm);
+                    }
+            return result;
         }
     }
 }

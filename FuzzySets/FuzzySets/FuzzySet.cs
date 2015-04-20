@@ -15,6 +15,11 @@ namespace FuzzySets
             return _flv(value);
         }
 
+        public FuzzySet(double val = 0)
+        {
+            this._flv = x => val;
+        }
+
         public FuzzySet(Func<double, double> flv)
         {
             this._flv = flv;

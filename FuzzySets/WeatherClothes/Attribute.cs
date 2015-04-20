@@ -21,22 +21,41 @@ namespace WeatherClothes
 
         public double GetAttributeValue(String label, double value)
         {
-            var s = labels.IndexOf(label);
-            if (s == -1) throw new ArgumentException("Label not found");
-            return attributes[s][value];
+            return GetFuzzySet(label)[value];
         }
 
         public double[] this[double value]
         {
             get{
-                var l = new List<double>();
-                foreach(String s in labels)
-                {
-                    l.Add(GetAttributeValue(s, value));
-                }
-                return l.ToArray();
+                return GetValues(value);
             }
         }
 
+        public double[] GetValues(double value)
+        {
+            var l = new List<double>();
+            foreach (String s in labels)
+            {
+                l.Add(GetAttributeValue(s, value));
+            }
+            return l.ToArray();
+        }
+
+        public double GetAttributeValue(int index, double value)
+        {
+            return GetFuzzySet(index)[value];
+        }
+
+        public FuzzySet GetFuzzySet(int index)
+        {
+            return attributes[index];
+        }
+
+        public FuzzySet GetFuzzySet(String label)
+        {
+            var s = labels.IndexOf(label);
+            if (s == -1) throw new ArgumentException("Label not found");
+            return GetFuzzySet(s);
+        }
     }
 }
