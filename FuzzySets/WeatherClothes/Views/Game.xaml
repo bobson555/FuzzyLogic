@@ -51,7 +51,7 @@
                 
                 </TextBlock>
             </Border>
-                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-20" FormatString="D0" Value="0" Maximum="30" Width="100" >
+                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-273" FormatString="D0" Value="0" Maximum="100" Width="100" >
                     
                 </l:TemperatureUpDown>
             </StackPanel>
@@ -64,7 +64,7 @@
 
                     </TextBlock>
                 </Border>
-                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="0" Maximum="20" Width="100" >
+                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="0" Maximum="40" Width="100" >
 
                 </l:SpeedUpDown>
             </StackPanel>
