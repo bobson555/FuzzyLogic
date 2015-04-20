@@ -68,3 +68,5 @@ C:\Users\Błażej\FuzzyLogic\FuzzySets\WeatherClothes\obj\Debug\Views\Game.baml
 C:\Users\Błażej\FuzzyLogic\FuzzySets\WeatherClothes\obj\Debug\TwentyQuestions.g.resources
 C:\Users\Błażej\FuzzyLogic\FuzzySets\WeatherClothes\obj\Debug\WeatherClothes.Properties.Resources.resources
 C:\Users\Błażej\FuzzyLogic\FuzzySets\WeatherClothes\obj\Debug\WeatherClothes.csproj.GenerateResource.Cache
+C:\Users\Patryk\FuzzyLogic\FuzzySets\WeatherClothes\bin\Debug\FuzzySets.dll
+C:\Users\Patryk\FuzzyLogic\FuzzySets\WeatherClothes\bin\Debug\FuzzySets.pdb

@@ -93,19 +93,20 @@ namespace FuzzySets
         public static LinearSegmentFuzzySet Intersection(LinearSegmentFuzzySet s1, LinearSegmentFuzzySet s2, Norm norm)
         {
             Func<double, double> flv = null;
+            //TODO: Improve Segmentation
             switch (norm)
             {
                 case Norm.Zadeh:
                     flv = x => Math.Min(s1.FLV(x), s2.FLV(x));
                     break;
                 case Norm.Lukasiewicz:
-                    throw new NotImplementedException();
+                    flv = x => Math.Max(0, s1.FLV(x) + s2.FLV(x) - 1);
                     break;
-                case Norm.Eintein:
-                    throw new NotImplementedException();
+                case Norm.Einstein:
+                    flv = x => (s1.FLV(x) * s2.FLV(x)) / (2 - (s1.FLV(x) + s2.FLV(x) - s1.FLV(x) * s2.FLV(x)));
                     break;
-                case Norm.Bounded:
-                    flv = x => Math.Max(s1.FLV(x) + s2.FLV(x) - 1, 0);
+                case Norm.Algebraic:
+                    flv = x => (s1.FLV(x) *s2.FLV(x));
                     break;
             }
             var points = new List<double>();
@@ -117,19 +118,20 @@ namespace FuzzySets
         public static LinearSegmentFuzzySet Union(LinearSegmentFuzzySet s1, LinearSegmentFuzzySet s2, Norm norm)
         {
             Func<double, double> flv = null;
+            //TODO: Improve segmentation
             switch (norm)
             {
                 case Norm.Zadeh:
                     flv = x => Math.Max(s1.FLV(x), s2.FLV(x));
                     break;
                 case Norm.Lukasiewicz:
-                    throw new NotImplementedException();
-                    break;
-                case Norm.Eintein:
-                    throw new NotImplementedException();
-                    break;
-                case Norm.Bounded:
                     flv = x => Math.Min(s1.FLV(x) + s2.FLV(x), 1);
+                    break;
+                case Norm.Einstein:
+                    flv = x => (s1.FLV(x) + s2.FLV(x)) / (1 + s1.FLV(x) * s2.FLV(x));
+                    break;
+                case Norm.Algebraic:
+                    flv = x => 1 - (1 - s1.FLV(x))*(1 - s2.FLV(x));
                     break;
             }
 

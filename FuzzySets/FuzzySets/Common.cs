@@ -10,8 +10,8 @@ namespace FuzzySets
     public enum Norm
     {
         Zadeh,
-        Eintein,
-        Bounded,
+        Einstein,
+        Algebraic,
         Lukasiewicz
     }
 
