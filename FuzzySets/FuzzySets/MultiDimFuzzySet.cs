@@ -35,7 +35,7 @@ namespace FuzzySets
             protected set;
         }
 
-        public static SingleFunctionFuzzySet CartesianProduct(MultiDimFuzzySet s1, MultiDimFuzzySet s2, Norm norm)
+        public static SingleFunctionFuzzySet CartesianProduct(MultiDimFuzzySet s1, MultiDimFuzzySet s2, Norm norm=Norm.Zadeh)
         {
             Func<IEnumerable<double>, double> flv = null;
             //TODO: switch

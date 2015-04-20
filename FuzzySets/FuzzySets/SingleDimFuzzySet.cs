@@ -46,13 +46,13 @@ namespace FuzzySets
                     flv = x => Math.Min(s1.FLV(x), s2.FLV(x));
                     break;
                 case Norm.Lukasiewicz:
-                    throw new NotImplementedException();
+                    flv = x => Math.Max(0, s1.FLV(x) + s2.FLV(x) - 1);
                     break;
-                case Norm.Eintein:
-                    throw new NotImplementedException();
+                case Norm.Einstein:
+                    flv = x => (s1.FLV(x) * s2.FLV(x)) / (2 - (s1.FLV(x) + s2.FLV(x) - s1.FLV(x) * s2.FLV(x)));
                     break;
-                case Norm.Bounded:
-                    flv = x => Math.Max(s1.FLV(x) + s2.FLV(x) - 1, 0);
+                case Norm.Algebraic:
+                    flv = x => (s1.FLV(x) * s2.FLV(x));
                     break;
             }
             return new FuzzySet(flv);
@@ -67,13 +67,13 @@ namespace FuzzySets
                     flv = x => Math.Max(s1.FLV(x), s2.FLV(x));
                     break;
                 case Norm.Lukasiewicz:
-                    throw new NotImplementedException();
-                    break;
-                case Norm.Eintein:
-                    throw new NotImplementedException();
-                    break;
-                case Norm.Bounded:
                     flv = x => Math.Min(s1.FLV(x) + s2.FLV(x), 1);
+                    break;
+                case Norm.Einstein:
+                    flv = x => (s1.FLV(x) + s2.FLV(x)) / (1 + s1.FLV(x) * s2.FLV(x));
+                    break;
+                case Norm.Algebraic:
+                    flv = x => 1 - (1 - s1.FLV(x)) * (1 - s2.FLV(x));
                     break;
             }
             return new FuzzySet(flv);
