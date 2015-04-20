@@ -39,44 +39,12 @@ namespace FuzzySets
 
         public static FuzzySet Intersection(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm)
         {
-            Func<double, double> flv = null;
-            switch (norm)
-            {
-                case Norm.Zadeh:
-                    flv = x => Math.Min(s1.FLV(x), s2.FLV(x));
-                    break;
-                case Norm.Lukasiewicz:
-                    flv = x => Math.Max(0, s1.FLV(x) + s2.FLV(x) - 1);
-                    break;
-                case Norm.Einstein:
-                    flv = x => (s1.FLV(x) * s2.FLV(x)) / (2 - (s1.FLV(x) + s2.FLV(x) - s1.FLV(x) * s2.FLV(x)));
-                    break;
-                case Norm.Algebraic:
-                    flv = x => (s1.FLV(x) * s2.FLV(x));
-                    break;
-            }
-            return new FuzzySet(flv);
+            return new FuzzySet(x => Norms.ApplyTNorm(s1.FLV(x), s2.FLV(x), norm));
         }
 
         public static FuzzySet Union(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm)
         {
-            Func<double, double> flv = null;
-            switch (norm)
-            {
-                case Norm.Zadeh:
-                    flv = x => Math.Max(s1.FLV(x), s2.FLV(x));
-                    break;
-                case Norm.Lukasiewicz:
-                    flv = x => Math.Min(s1.FLV(x) + s2.FLV(x), 1);
-                    break;
-                case Norm.Einstein:
-                    flv = x => (s1.FLV(x) + s2.FLV(x)) / (1 + s1.FLV(x) * s2.FLV(x));
-                    break;
-                case Norm.Algebraic:
-                    flv = x => 1 - (1 - s1.FLV(x)) * (1 - s2.FLV(x));
-                    break;
-            }
-            return new FuzzySet(flv);
+            return new FuzzySet(x=> Norms.ApplySNorm(s1.FLV(x), s2.FLV(x), norm));
         }
 
         public FuzzySet UnionWith(SingleDimFuzzySet other, Norm norm)
