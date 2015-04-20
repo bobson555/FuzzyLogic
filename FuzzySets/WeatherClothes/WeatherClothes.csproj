@@ -71,6 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Attribute.cs" />
     <Compile Include="HalfValueConverter.cs" />
     <Compile Include="TemperatureUpDown.cs" />
     <Compile Include="Views\Game.xaml.cs">
@@ -127,6 +128,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FuzzySets\FuzzySets.csproj">
+      <Project>{09eff8c7-9047-412d-9b02-a3b7fdcdffde}</Project>
+      <Name>FuzzySets</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
