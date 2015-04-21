@@ -68,6 +68,9 @@ namespace WeatherClothes.Views
             InitializeAttributes();
         }
 
+        /// <summary>
+        /// Inicjalizacja zmiennych prywatnych
+        /// </summary>
         private void InitializeAttributes()
         {
             var temperatureList = new List<String> { "Cold", "Warm", "Hot" };
@@ -108,6 +111,11 @@ namespace WeatherClothes.Views
             };
         }
 
+        /// <summary>
+        /// Przeprowadzenie Analizy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Analyze_Click(object sender, RoutedEventArgs e)
         {
             var temperatureArr = Temperature[TemperatureDP];
@@ -127,26 +135,38 @@ namespace WeatherClothes.Views
         {
             var RuleValueSets = CalculateRuleValues(input, norm);
             var ClothesResult = CalculateResultFuzzySet(RuleValueSets, norm);
-            var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], double.MinValue, double.MaxValue, 0.001);
-            var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], double.MinValue, double.MaxValue, 0.001);
-            var crispValue = r1 / r2;
+            var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 100, 0.0001);
+            var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 100, 0.0001);
+            var crispValue = r1 / r2; //Środek ciężkości wynikowego zbioru
             return Clothes.GetMaxLabel(crispValue);
         }
 
-        private FuzzySet CalculateResultFuzzySet(FuzzySet[, ,] RuleValueSets, Norm norm=Norm.Zadeh)
+        /// <summary>
+        /// Obliczenie wynikowego zbioru rozmytego
+        /// </summary>
+        /// <param name="RuleValueSets"></param>
+        /// <param name="norm"></param>
+        /// <returns></returns>
+        private FuzzySet CalculateResultFuzzySet(FuzzySet[, ,] RuleValueSets, Norm norm = Norm.Zadeh)
         {
             var rfs = new FuzzySet[] { new FuzzySet(Clothes.GetFuzzySet(0)), new FuzzySet(Clothes.GetFuzzySet(1)), new FuzzySet(Clothes.GetFuzzySet(2)) };
             for (int a = 0; a < 3; a++)
                 for (int b = 0; b < 3; b++)
                     for (int c = 0; c < 3; c++)
                     {
-                        var ind = Rules[a, b, c];
+                        var ind = Rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
                         rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm);
                     }
             var resultFuzzySet= rfs[0].UnionWith(rfs[1].UnionWith(rfs[2], norm), norm);
             return resultFuzzySet;
         }
 
+        /// <summary>
+        /// Obliczneie przynależności do zbiorów Clothes na podstawie Rules
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="norm"></param>
+        /// <returns></returns>
         private FuzzySet[, ,] CalculateRuleValues(double[][] input, Norm norm = Norm.Zadeh)
         {
             var result = new FuzzySet[3, 3, 3];
