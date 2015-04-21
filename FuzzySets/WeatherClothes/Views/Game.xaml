@@ -51,7 +51,7 @@
                 
                 </TextBlock>
             </Border>
-                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-273" FormatString="D0" Value="0" Maximum="100" Width="100" >
+                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-273" Value="{Binding TemperatureDP, Mode=TwoWay}" FormatString="D0"  Maximum="100" Width="100" >
                     
                 </l:TemperatureUpDown>
             </StackPanel>
@@ -64,7 +64,7 @@
 
                     </TextBlock>
                 </Border>
-                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="0" Maximum="40" Width="100" >
+                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="{Binding WindSpeedDP,Mode=TwoWay}" Maximum="40" Width="100" >
 
                 </l:SpeedUpDown>
             </StackPanel>
@@ -78,7 +78,7 @@
 
                 </TextBlock>
             </Border>
-            <xctk:DoubleUpDown x:Name="Iupdown3" FormatString="P0" Value="0" Minimum="0" Maximum="1" Width="100" Increment=".01">
+            <xctk:DoubleUpDown x:Name="Iupdown3" FormatString="P0" Value="{Binding MoistureDP,Mode=TwoWay}" Minimum="0" Maximum="1" Width="100" Increment=".01">
 
             </xctk:DoubleUpDown>
         </StackPanel>

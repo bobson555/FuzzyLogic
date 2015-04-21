@@ -58,16 +58,18 @@ namespace WeatherClothes
             return GetFuzzySet(s);
         }
 
-        public String GetMaxLabel(double val)
+        public String GetMaxLabel(double val, double[] weights, Norm norm = Norm.Zadeh)
         {
+            if (weights.Count() != labels.Count()) throw new ArgumentException();
             String reslabel=null;
-            var res = double.MinValue;
+            var res = double.NegativeInfinity;
             for (int i = 0; i < attributes.Count; i++)
             {
-                if (attributes[i][val] > res)
+                var fset = attributes[i].IntersectWith(new FuzzySet(weights[i]), norm);
+                if (fset[val] > res)
                 {
                     reslabel = labels[i];
-                    res = attributes[i][val];
+                    res = fset[val];
                 }
             }
             if (reslabel==null) throw new Exception("World ends");
