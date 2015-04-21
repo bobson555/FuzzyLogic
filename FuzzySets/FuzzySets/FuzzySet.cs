@@ -41,6 +41,11 @@ namespace FuzzySets
             this._flv = x => { l[dim-1] += x; return s.FLV(l); };
         }
 
+        public FuzzySet(SingleDimFuzzySet fuzzySet)
+        {
+            this._flv = x => fuzzySet.FLV(x);
+        }
+
 
     }
 }

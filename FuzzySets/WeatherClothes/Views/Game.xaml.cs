@@ -118,6 +118,7 @@ namespace WeatherClothes.Views
 
             //TODO: wykonać następne kroki 4 razy, po jednym na każdą normę
             var RuleValueSets = CalculateRuleValues(input);
+            var ClothesResult = CalculateResultFuzzySet(RuleValueSets);
             /*
              * TODO: Wygeneruj zbiór wyjściowy:
              * 1. Oblicz przecięcie każdego zbioru w RuleValueSets w obrębie tej samej wartości w tablicy Rules
@@ -129,7 +130,21 @@ namespace WeatherClothes.Views
              */
         }
 
-        private FuzzySet[,,] CalculateRuleValues(double[][] input, Norm norm=Norm.Zadeh)
+        private FuzzySet CalculateResultFuzzySet(FuzzySet[, ,] RuleValueSets, Norm norm=Norm.Zadeh)
+        {
+            var rfs = new FuzzySet[] { new FuzzySet(Clothes.GetFuzzySet(0)), new FuzzySet(Clothes.GetFuzzySet(1)), new FuzzySet(Clothes.GetFuzzySet(2)) };
+            for (int a = 0; a < 3; a++)
+                for (int b = 0; b < 3; b++)
+                    for (int c = 0; c < 3; c++)
+                    {
+                        var ind = Rules[a, b, c];
+                        rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm);
+                    }
+            var resultFuzzySet= rfs[0].UnionWith(rfs[1].UnionWith(rfs[2], norm), norm);
+            return resultFuzzySet;
+        }
+
+        private FuzzySet[, ,] CalculateRuleValues(double[][] input, Norm norm = Norm.Zadeh)
         {
             var result = new FuzzySet[3, 3, 3];
             for(int tInd=0; tInd<3; tInd++)
