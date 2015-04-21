@@ -116,18 +116,21 @@ namespace WeatherClothes.Views
 
             var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
 
-            //TODO: wykonać następne kroki 4 razy, po jednym na każdą normę
-            var RuleValueSets = CalculateRuleValues(input);
-            var ClothesResult = CalculateResultFuzzySet(RuleValueSets);
-            /*
-             * TODO: Wygeneruj zbiór wyjściowy:
-             * 1. Oblicz przecięcie każdego zbioru w RuleValueSets w obrębie tej samej wartości w tablicy Rules
-             * 2. Oblicz przecięcie powstałych trzech zbiorów z odpowiednimi zbiorami w obrębie atrybutu Clothes
-             * 3. Zsumuj otrzymane trzy zbiory w jeden zbiór ClothesResult
-             * 4. Zastosuj metodę centroidu do znalezienia pojedynczej wartości ClothesResult
-             * 5. Zinterpretuj wynik (proponowana metoda: znajdź zbiór dla którego FLV(znaleziona wartość) przyjmuje max)
-             * 6. Wyświetla wynik
-             */
+            var tata = GetOpinion(input, Norm.Zadeh);
+            var mama = GetOpinion(input, Norm.Algebraic);
+            var babcia = GetOpinion(input, Norm.Lukasiewicz);
+            var dziadek = GetOpinion(input, Norm.Einstein);
+            
+        }
+
+        private String GetOpinion(double[][] input, Norm norm = Norm.Zadeh)
+        {
+            var RuleValueSets = CalculateRuleValues(input, norm);
+            var ClothesResult = CalculateResultFuzzySet(RuleValueSets, norm);
+            var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], double.MinValue, double.MaxValue, 0.001);
+            var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], double.MinValue, double.MaxValue, 0.001);
+            var crispValue = r1 / r2;
+            return Clothes.GetMaxLabel(crispValue);
         }
 
         private FuzzySet CalculateResultFuzzySet(FuzzySet[, ,] RuleValueSets, Norm norm=Norm.Zadeh)

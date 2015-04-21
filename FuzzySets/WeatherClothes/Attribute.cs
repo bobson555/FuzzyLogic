@@ -57,5 +57,21 @@ namespace WeatherClothes
             if (s == -1) throw new ArgumentException("Label not found");
             return GetFuzzySet(s);
         }
+
+        public String GetMaxLabel(double val)
+        {
+            String reslabel=null;
+            var res = double.MinValue;
+            for (int i = 0; i < attributes.Count; i++)
+            {
+                if (attributes[i][val] > res)
+                {
+                    reslabel = labels[i];
+                    res = attributes[i][val];
+                }
+            }
+            if (reslabel==null) throw new Exception("World ends");
+            return reslabel;
+        }
     }
 }
