@@ -31,9 +31,9 @@ namespace FuzzySets
         public double FLV(double x)
         {
             if (Flv == null || x < Start || x > End) return 0;
-            if (isIncreasing && (Flv(x) < Flv(Start) || Flv(x) > Flv(End))) throw new ArgumentOutOfRangeException();
-            if (isDecreasing && (Flv(x) > Flv(Start) || Flv(x) < Flv(End))) throw new ArgumentOutOfRangeException();
-            if (isSingleValued && (Flv(x) != Flv(Start) || Flv(Start) != Flv(End))) throw new ArgumentOutOfRangeException();
+            if (isIncreasing && (Flv(x) < StartValue || Flv(x) > EndValue)) throw new ArgumentOutOfRangeException();
+            if (isDecreasing && (Flv(x) > StartValue || Flv(x) < EndValue)) throw new ArgumentOutOfRangeException();
+            if (isSingleValued && (Flv(x) != StartValue || StartValue != EndValue)) throw new ArgumentOutOfRangeException();
             return Flv(x);
         }
         public double this[double value]
@@ -44,8 +44,8 @@ namespace FuzzySets
             }
         }
 
-        public bool isIncreasing { get { return Start < End; } }
-        public bool isDecreasing { get { return Start > End; } }
+        public bool isIncreasing { get { return StartValue < EndValue; } }
+        public bool isDecreasing { get { return StartValue > EndValue; } }
         public bool isNonIncreasing { get { return !isIncreasing; } }
         public bool isNonDecreasing { get { return !isDecreasing; } }
         public bool isSingleValued { get { return Start == End; } }

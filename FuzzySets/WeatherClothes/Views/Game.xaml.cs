@@ -1,6 +1,7 @@
 ﻿using FuzzySets;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace WeatherClothes.Views
     /// <summary>
     /// Interaction logic for Game.xaml
     /// </summary>
-    public partial class Game : Window
+    public partial class Game : Window, INotifyPropertyChanged
     {
         Attribute Temperature;
         Attribute Moisture;
@@ -27,10 +28,17 @@ namespace WeatherClothes.Views
         int[, ,] Rules;
 
         #region DependecyProperties
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
         public double TemperatureDP
         {
-            get { return (double)GetValue(TemperatureDPProperty); }
-            set { SetValue(TemperatureDPProperty, value); }
+            get { 
+                return (double)GetValue(TemperatureDPProperty); }
+            set { 
+                SetValue(TemperatureDPProperty, value); OnPropertyChanged("TemperatureDP"); }
         }
 
         // Using a DependencyProperty as the backing store for TemperatureDP.  This enables animation, styling, binding, etc...
@@ -40,7 +48,7 @@ namespace WeatherClothes.Views
         public double MoistureDP
         {
             get { return (double)GetValue(MoistureDPProperty); }
-            set { SetValue(MoistureDPProperty, value); }
+            set { SetValue(MoistureDPProperty, value); OnPropertyChanged("MoistureDP"); }
         }
 
         // Using a DependencyProperty as the backing store for MoistureDP.  This enables animation, styling, binding, etc...
@@ -50,7 +58,7 @@ namespace WeatherClothes.Views
         public double WindSpeedDP
         {
             get { return (double)GetValue(WindSpeedDPProperty); }
-            set { SetValue(WindSpeedDPProperty, value); }
+            set { SetValue(WindSpeedDPProperty, value); OnPropertyChanged("WindSpeedDP"); }
         }
 
         // Using a DependencyProperty as the backing store for WindSpeedDP.  This enables animation, styling, binding, etc...
@@ -58,13 +66,19 @@ namespace WeatherClothes.Views
             DependencyProperty.Register("WindSpeedDP", typeof(double), typeof(Game));
 
         #endregion
-
+        
         public Game()
         {
+            TemperatureDP = 0;
+            WindSpeedDP = 0;
+            MoistureDP = 0;
             InitializeComponent();
             TextBlock1.Text = "Temperatura\notoczenia";
             TextBlock2.Text = "Prędkość\nwiatru";
             TextBlock3.Text = "Wilgotność\npowietrza";
+
+            this.DataContext = this;
+
             InitializeAttributes();
         }
 
@@ -88,9 +102,9 @@ namespace WeatherClothes.Views
             var strongWindFSet = new RightShoulderFuzzySet(10, 15, double.PositiveInfinity, 1);
             var windSets = new List<FuzzySet> { noWindFSet.ToFuzzySet(), mildWindFSet.ToFuzzySet(), strongWindFSet.ToFuzzySet() };
 
-            var dryFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 10, 1);
-            var moistFSet = new TriangleFuzzySet(5, 10, 15, 1);
-            var rainFSet = new RightShoulderFuzzySet(10, 15, double.PositiveInfinity, 1);
+            var dryFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 0.5, 1);
+            var moistFSet = new TriangleFuzzySet(0.25, 0.5, 0.75, 1);
+            var rainFSet = new RightShoulderFuzzySet(0.5, 0.75, double.PositiveInfinity, 1);
             var moistureSets = new List<FuzzySet> { dryFSet.ToFuzzySet(), moistFSet.ToFuzzySet(), rainFSet.ToFuzzySet() };
 
             var winterFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 50, 1);
@@ -102,7 +116,7 @@ namespace WeatherClothes.Views
             WindSpeed = new Attribute(windSpeedList, windSets);
             Moisture = new Attribute(moistureList, moistureSets);
             Clothes = new Attribute(clothesList, clothesSets);
-
+       
             Rules = new int[,,]
             {
                 {{1,2,2},{0,1,2},{0,1,1}},
@@ -128,17 +142,18 @@ namespace WeatherClothes.Views
             var mama = GetOpinion(input, Norm.Algebraic);
             var babcia = GetOpinion(input, Norm.Lukasiewicz);
             var dziadek = GetOpinion(input, Norm.Einstein);
-            
+            MessageBox.Show(String.Format("tata: {0} \n mama: {1} \n babcia: {2} \n dziadek: {3}",tata,mama,babcia,dziadek));
         }
 
         private String GetOpinion(double[][] input, Norm norm = Norm.Zadeh)
         {
             var RuleValueSets = CalculateRuleValues(input, norm);
-            var ClothesResult = CalculateResultFuzzySet(RuleValueSets, norm);
+            var ClothesResults = CalculateResultFuzzySets(RuleValueSets, norm);
+            var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm),norm);
             var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 100, 0.0001);
             var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 100, 0.0001);
             var crispValue = r1 / r2; //Środek ciężkości wynikowego zbioru
-            return Clothes.GetMaxLabel(crispValue);
+            return Clothes.GetMaxLabel(crispValue, new double[]{ClothesResults[0][crispValue],ClothesResults[1][crispValue],ClothesResults[2][crispValue]}, norm);
         }
 
         /// <summary>
@@ -147,18 +162,18 @@ namespace WeatherClothes.Views
         /// <param name="RuleValueSets"></param>
         /// <param name="norm"></param>
         /// <returns></returns>
-        private FuzzySet CalculateResultFuzzySet(FuzzySet[, ,] RuleValueSets, Norm norm = Norm.Zadeh)
+        private FuzzySet[] CalculateResultFuzzySets(FuzzySet[, ,] RuleValueSets, Norm norm = Norm.Zadeh)
         {
             var rfs = new FuzzySet[] { new FuzzySet(Clothes.GetFuzzySet(0)), new FuzzySet(Clothes.GetFuzzySet(1)), new FuzzySet(Clothes.GetFuzzySet(2)) };
             for (int a = 0; a < 3; a++)
                 for (int b = 0; b < 3; b++)
                     for (int c = 0; c < 3; c++)
                     {
+                        if (RuleValueSets[a, b, c] == null) continue;
                         var ind = Rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
                         rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm);
                     }
-            var resultFuzzySet= rfs[0].UnionWith(rfs[1].UnionWith(rfs[2], norm), norm);
-            return resultFuzzySet;
+            return rfs;
         }
 
         /// <summary>
@@ -174,9 +189,13 @@ namespace WeatherClothes.Views
                 for(int mInd=0; mInd<3; mInd++)
                     for (int wInd = 0; wInd < 3; wInd++)
                     {
-                        result[wInd, mInd, tInd] = new FuzzySet(Norms.ApplyTNorm(Norms.ApplyTNorm(Temperature.GetAttributeValue(tInd, input[0][tInd]), Moisture.GetAttributeValue(mInd, input[1][mInd])), WindSpeed.GetAttributeValue(wInd, input[2][wInd]), norm));
+                        var val = Norms.ApplyTNorm(Norms.ApplyTNorm(Temperature.GetAttributeValue(tInd, input[0][tInd]), Moisture.GetAttributeValue(mInd, input[1][mInd])), WindSpeed.GetAttributeValue(wInd, input[2][wInd]), norm);
+                        if(val != 0)
+                        result[wInd, mInd, tInd] = new FuzzySet(val);
                     }
             return result;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
