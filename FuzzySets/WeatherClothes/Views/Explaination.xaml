@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:oxy="http://oxyplot.org/wpf"
-        Title="Explaination" Height="700" Width="1000" MinHeight="700" MinWidth="1000">
+        Title="Explaination" WindowState ="Maximized" Height="700" Width="1000" MinHeight="700" MinWidth="1000">
     <Grid>
         <TabControl>
             <TabItem Header="Wstępna Analiza">
@@ -15,14 +15,27 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <oxy:Plot Title="{Binding Plot1.Title}" Model="{Binding Plot1.Model}" Grid.Row="0" Grid.Column="0"/>
+                    <oxy:Plot Title="{Binding Plot1.Title}" TitleColor="Black" TitleFontSize="18" TitleFont="Century Gothic" TitleHorizontalAlignment="CenteredWithinPlotArea" Model="{Binding Plot1.Model}" Grid.Row="0" Grid.Column="0"/>
                     <oxy:Plot Title="{Binding Plot2.Title}" Model="{Binding Plot2.Model}" Grid.Row="0" Grid.Column="1"/>
                     <oxy:Plot Title="{Binding Plot3.Title}" Model="{Binding Plot3.Model}" Grid.Row="1" Grid.Column="0"/>
                     <oxy:Plot Title="{Binding Plot4.Title}" Model="{Binding Plot4.Model}" Grid.Row="1" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Wyniki">
-               
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <oxy:Plot Title="{Binding PlotDad.Title}" Model="{Binding PlotDad.Model}" Grid.Row="0" Grid.Column="0"/>
+                    <oxy:Plot Title="{Binding PlotMum.Title}" Model="{Binding PlotMum.Model}" Grid.Row="0" Grid.Column="1"/>
+                    <oxy:Plot Title="{Binding PlotGMum.Title}" Model="{Binding PlotGMum.Model}" Grid.Row="1" Grid.Column="0"/>
+                    <oxy:Plot Title="{Binding PlotGDad.Title}" Model="{Binding PlotGDad.Model}" Grid.Row="1" Grid.Column="1"/>
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

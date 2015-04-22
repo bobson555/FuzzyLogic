@@ -22,7 +22,7 @@ namespace WeatherClothes.Views
         public Plot(string Title, Attribute A, double x0, double x1, double[] CrispValues, OxyPlot.OxyColor[] colors, string[] labels = null)
         {
             Model = new OxyPlot.PlotModel();
-            this.Title = Title;
+            Model.Title = Title;
             for (int i = 0; i < CrispValues.Length; i++)
             {
                 var D = new OxyPlot.Series.LineSeries();
@@ -58,7 +58,7 @@ namespace WeatherClothes.Views
         public Plot(string Title, Attribute A, double x0, double x1, double CrispValue, OxyPlot.OxyColor[] colors, string[] labels = null)
         {
             Model = new OxyPlot.PlotModel();
-            this.Title = Title;
+            Model.Title = Title;
             var D = new OxyPlot.Series.LineSeries();
             D.Title = string.Format("Input{0}", (labels == null || labels.Length <= 0) ? string.Empty : " " + labels[0]);
             D.Points.AddRange(new[] { new OxyPlot.DataPoint(CrispValue, 0), new OxyPlot.DataPoint(CrispValue, 1) });
@@ -76,13 +76,34 @@ namespace WeatherClothes.Views
             }
 
         }
+        public Plot(string Title, SingleDimFuzzySet A, double x0, double x1, double CrispValue, OxyPlot.OxyColor[] colors)
+        {
+            Model = new OxyPlot.PlotModel();
+
+            Model.Title = Title;
+            var D = new OxyPlot.Series.LineSeries();
+            D.Title = "Crisp Value";
+            D.Points.AddRange(new[] { new OxyPlot.DataPoint(CrispValue, 0), new OxyPlot.DataPoint(CrispValue, 1) });
+
+            D.Color = colors[3];
+            D.StrokeThickness = 2.05;
+            Model.Series.Add(D);
+
+           
+                var F = new OxyPlot.Series.FunctionSeries(x => (A.FLV(x)), x0, x1, Math.Abs(x1 - x0) / 1000,"FLV");
+                F.Color = colors[2];
+                F.StrokeThickness = 0.75;
+                Model.Series.Add(F);
+            
+
+        }
     }
     /// <summary>
     /// Interaction logic for Explaination.xaml
     /// </summary>
     public partial class Explaination : Window
     {
-        public Explaination(Attribute T, Attribute W, Attribute H, Attribute R, double[] Values)
+        public Explaination(Attribute T, Attribute W, Attribute H, Attribute R, double[] Values,SingleDimFuzzySet[] Sets)
         {
             var Colors = new OxyPlot.OxyColor[] { OxyPlot.OxyColor.FromRgb(0, 0, 255), OxyPlot.OxyColor.FromRgb(0, 255, 0), OxyPlot.OxyColor.FromRgb(255, 0, 0), OxyPlot.OxyColor.FromRgb(13, 34, 15) };
             Plot1 = new Plot("Temperatura", T, -10, 32, Values[0], Colors);
@@ -92,6 +113,10 @@ namespace WeatherClothes.Views
             AdditionalColors.AddRange(Colors);
             AdditionalColors.AddRange(new OxyPlot.OxyColor[] { OxyPlot.OxyColor.FromRgb(255, 0, 255), OxyPlot.OxyColor.FromRgb(0x99, 0x33, 0), OxyPlot.OxyColor.FromRgb(0, 0x33, 0x69) });
             Plot4 = new Plot("Wynik", R, 0, 100, new double[] { Values[3], Values[4], Values[5], Values[6] },  AdditionalColors.ToArray(), new[] { "Tata - Zadeh", "Mama - Algebraic", "Babcia - Lukasiewicz", "Dziadek - Einstein" });
+            PlotDad = new Plot("Tata-Zadeh", Sets[0], 0, 100, Values[3], AdditionalColors.ToArray());
+            PlotMum = new Plot("Mama-Algebraiczna", Sets[1], 0, 100, Values[4], AdditionalColors.ToArray());
+            PlotGMum = new Plot("Babcia-Lukasiewicz", Sets[2], 0, 100, Values[5], AdditionalColors.ToArray());
+            PlotGDad= new Plot("Dziadek-Einstein", Sets[3], 0, 100, Values[6], AdditionalColors.ToArray());
             DataContext = this;
             InitializeComponent();
             /*

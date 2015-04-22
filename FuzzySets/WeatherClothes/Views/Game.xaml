@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l ="clr-namespace:WeatherClothes"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="Game" Height="500" Width="400" Background="AliceBlue" MinHeight="400" MinWidth="500">
+        Title="Game" Height="500" Width="400" Background="AliceBlue" MinHeight="400" MinWidth="500" Closing="Window_Closing_1">
     <Window.Resources>
         <l:HalfValueConverter x:Key="HalfValueConverter"/>
         
@@ -71,7 +71,7 @@
         </Canvas>
     
     <Canvas x:Name="Canvas3" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
-        <Rectangle Fill="Aquamarine" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas3, Path=ActualHeight}" Width="{Binding ElementName=Canvas1, Path=ActualWidth}"/>
+        <Rectangle Fill="Aquamarine" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas3, Path=ActualHeight}" Width="{Binding ElementName=Canvas3, Path=ActualWidth}"/>
         <StackPanel Orientation="Vertical">
             <Border BorderBrush="{x:Null}" >
                     <TextBlock x:Name="TextBlock3" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas3}" >

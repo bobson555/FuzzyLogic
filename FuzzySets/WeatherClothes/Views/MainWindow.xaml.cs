@@ -30,14 +30,20 @@ namespace WeatherClothes
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+           
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Game g = new Game();
             this.Visibility = Visibility.Collapsed;
-            g.ShowDialog();
-            this.Visibility = Visibility.Visible;
+            g.ParentView = this;
+            g.Show();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

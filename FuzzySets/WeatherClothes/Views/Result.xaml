@@ -1,7 +1,32 @@
 ﻿<Window x:Class="WeatherClothes.Views.Result"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Result" Height="300" Width="300">
+        xmlns:l ="clr-namespace:WeatherClothes"
+        Title="Result" Height="400" Width="400" WindowState="Maximized" MinHeight="700" MinWidth="800" Background="AliceBlue" Closing="Window_Closing">
+    <Window.Resources>
+        <l:HalfValueConverter x:Key="HalfValueConverter"/>
+        <l:ImageValueConverter x:Key="ImageValueConverter"/>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Ellipse Fill="LightGreen"  Stretch="Fill" Stroke="LavenderBlush" HorizontalAlignment="Stretch"/>
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+        <Style x:Key="TextStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="ExtraBold"/>
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -10,8 +35,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+           
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -19,6 +52,94 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Button Grid.ColumnSpan="2" Content="Wyjaśnij" Grid.Column="2" HorizontalAlignment="Left" Height="45" Grid.Row="5" VerticalAlignment="Top" Width="97" Click="Button_Click"/>
+        <Canvas x:Name="CanvasTata" Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+            <Rectangle Fill="LavenderBlush" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=CanvasTata, Path=ActualHeight}" Width="{Binding ElementName=CanvasTata, Path=ActualWidth}"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{x:Null}" >
+                    <TextBlock x:Name="TextBlock1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasTata}" >
+                        Tata Poleca
+                    </TextBlock>
+                </Border>
+                <Image Source="{Binding Tata.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasTata, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasTata, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
+                <TextBlock x:Name="TextBlock2" FontSize="18" Grid.Row="4" Text="{Binding Tata.Item2}" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasTata}" />
+
+
+
+            </Grid>
+        </Canvas>
+        <Canvas x:Name="CanvasMama" Grid.Row="1" Grid.Column="3" Grid.RowSpan="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+            <Rectangle Fill="AntiqueWhite" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=CanvasMama, Path=ActualHeight}" Width="{Binding ElementName=CanvasMama, Path=ActualWidth}"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{x:Null}" >
+                    <TextBlock x:Name="TextBlockMama1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasMama}" >
+                        Mama Poleca
+                    </TextBlock>
+                </Border>
+                <Image Source="{Binding Mama.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasMama, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasMama, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
+                <TextBlock x:Name="TextBlockMama2" FontSize="18" Grid.Row="4" Text="{Binding Mama.Item2}" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasMama}" />
+
+
+
+            </Grid>
+        </Canvas>
+        <Canvas x:Name="CanvasBabcia" Grid.Row="1" Grid.Column="6" Grid.RowSpan="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+            <Rectangle Fill="LightGray" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=CanvasBabcia, Path=ActualHeight}" Width="{Binding ElementName=CanvasBabcia, Path=ActualWidth}" />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{x:Null}" >
+                    <TextBlock x:Name="TextBlockBabcia1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasBabcia}" >
+                        Babcia Poleca
+                    </TextBlock>
+                </Border>
+                <Image Source="{Binding Babcia.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasBabcia, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasBabcia, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
+                <TextBlock x:Name="TextBlockBabcia12" FontSize="18" Grid.Row="4" Text="{Binding Babcia.Item2}" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasBabcia}" />
+
+
+
+            </Grid>
+        </Canvas>
+        <Canvas x:Name="CanvasDziadek" Grid.Row="1" Grid.Column="9" Grid.RowSpan="3" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+            <Rectangle Fill="LightSalmon" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=CanvasDziadek, Path=ActualHeight}" Width="{Binding ElementName=CanvasDziadek, Path=ActualWidth}"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border BorderBrush="{x:Null}" >
+                    <TextBlock x:Name="TextBlockDziadek1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasDziadek}" >
+                        Dziadek Poleca
+                    </TextBlock>
+                </Border>
+                <Image Source="{Binding Dziadek.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasDziadek, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasDziadek, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
+                <TextBlock x:Name="TextBlockDziadek12" FontSize="18" Grid.Row="4" Text="{Binding Dziadek.Item2}" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasDziadek}" />
+
+
+
+            </Grid>
+        </Canvas>
+        <Button Grid.ColumnSpan="4" Content="Wyjaśnij" Grid.Column="4"  Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Row="7" Click="Button_Click"/>
      </Grid>
 </Window>
