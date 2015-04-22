@@ -75,5 +75,10 @@ namespace WeatherClothes
             if (reslabel==null) throw new Exception("World ends");
             return reslabel;
         }
+
+        public string GetLabel(int i)
+        {
+            return labels[i];
+        }
     }
 }

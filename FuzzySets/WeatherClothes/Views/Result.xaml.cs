@@ -19,9 +19,33 @@ namespace WeatherClothes.Views
     /// </summary>
     public partial class Result : Window
     {
-        public Result()
+        Explaination E;
+        Attribute T;
+        Attribute W;
+        Attribute H;
+        Attribute R;
+        double[] Values;
+        public Result(Attribute T,Attribute W,Attribute H,Attribute R,double[] Values)
         {
+            this.Values = Values;
+            this.T = T;
+            this.W = W;
+            this.H = H;
+            this.R = R;
+            Initialize();
             InitializeComponent();
+        }
+        public void Initialize()
+        {
+            E = new Explaination(T, W, H, R, Values);
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            
+            E.ShowDialog();
+            Initialize();
+
+            
         }
     }
 }

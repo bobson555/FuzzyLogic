@@ -25,7 +25,8 @@ namespace FuzzySets
             this.RightClosed = rightClosed;
             this.LeftClosed = leftClosed;
             double a = start == end ? 0 : (startValue - endValue) / (start - end);
-            double b = startValue - a * start;
+            if (double.IsNaN(a)) a = 0;
+            double b = startValue - a * (double.IsInfinity(start)||double.IsNegativeInfinity(start)?0:start);
             Flv = x => a * x + b;
         }
         public double FLV(double x)
@@ -34,7 +35,8 @@ namespace FuzzySets
             if (isIncreasing && (Flv(x) < StartValue || Flv(x) > EndValue)) throw new ArgumentOutOfRangeException();
             if (isDecreasing && (Flv(x) > StartValue || Flv(x) < EndValue)) throw new ArgumentOutOfRangeException();
             if (isSingleValued && (Flv(x) != StartValue || StartValue != EndValue)) throw new ArgumentOutOfRangeException();
-            return Flv(x);
+            var R= Flv(x);
+            return R;
         }
         public double this[double value]
         {

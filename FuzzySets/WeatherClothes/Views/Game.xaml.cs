@@ -137,22 +137,24 @@ namespace WeatherClothes.Views
             var windSpeedArr = WindSpeed[WindSpeedDP];
 
             var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
-
-            var tata = GetOpinion(input, Norm.Zadeh);
-            var mama = GetOpinion(input, Norm.Algebraic);
-            var babcia = GetOpinion(input, Norm.Lukasiewicz);
-            var dziadek = GetOpinion(input, Norm.Einstein);
+            double[] Values = new double[4];
+            var tata = GetOpinion(input, out Values[0],Norm.Zadeh);
+            var mama = GetOpinion(input, out Values[1],Norm.Algebraic);
+            var babcia = GetOpinion(input,out Values[2],Norm.Lukasiewicz);
+            var dziadek = GetOpinion(input,out Values[3],Norm.Einstein);
             MessageBox.Show(String.Format("tata: {0} \n mama: {1} \n babcia: {2} \n dziadek: {3}",tata,mama,babcia,dziadek));
+            Result R = new Result(Temperature, WindSpeed, Moisture, Clothes, new[] { TemperatureDP, MoistureDP, WindSpeedDP, Values[0], Values[1], Values[2], Values[3] });
+            R.ShowDialog();
         }
 
-        private String GetOpinion(double[][] input, Norm norm = Norm.Zadeh)
+        private String GetOpinion(double[][] input,out double crispValue, Norm norm = Norm.Zadeh)
         {
             var RuleValueSets = CalculateRuleValues(input, norm);
             var ClothesResults = CalculateResultFuzzySets(RuleValueSets, norm);
             var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm),norm);
             var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 100, 0.0001);
             var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 100, 0.0001);
-            var crispValue = r1 / r2; //Środek ciężkości wynikowego zbioru
+            crispValue = r1 / r2; //Środek ciężkości wynikowego zbioru
             return Clothes.GetMaxLabel(crispValue, new double[]{ClothesResults[0][crispValue],ClothesResults[1][crispValue],ClothesResults[2][crispValue]}, norm);
         }
 
