@@ -26,7 +26,7 @@ namespace WeatherClothes.Views
         Attribute WindSpeed;
         Attribute Clothes;
         int[, ,] Rules;
-
+        int[, ,] RulesR;
         #region DependecyProperties
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -111,9 +111,9 @@ namespace WeatherClothes.Views
             var rainFSet = new RightShoulderFuzzySet(0.4, 0.75, double.PositiveInfinity, 1);
             var moistureSets = new List<FuzzySet> { dryFSet.ToFuzzySet(), moistFSet.ToFuzzySet(), rainFSet.ToFuzzySet() };
 
-            var summerFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 1F/5F, 0.4, 1);
-            var springFSet = new TriangleFuzzySet(1F/5F, 0.4, 3F/5F, 1);
-            var winterFSet = new RightShoulderFuzzySet(0.4, 3F/5F, double.PositiveInfinity, 1);
+            var summerFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 1F / 5F, 0.4, 1);
+            var springFSet = new TriangleFuzzySet(1F / 5F, 0.4, 3F / 5F, 1);
+            var winterFSet = new RightShoulderFuzzySet(0.4, 3F / 5F, double.PositiveInfinity, 1);
             var clothesSets = new List<FuzzySet> { summerFSet.ToFuzzySet(), springFSet.ToFuzzySet(), winterFSet.ToFuzzySet() };
 
             Temperature = new Attribute(temperatureList, temperatureSets);
@@ -121,13 +121,15 @@ namespace WeatherClothes.Views
             Moisture = new Attribute(moistureList, moistureSets);
             Clothes = new Attribute(clothesList, clothesSets);
 
+
             Rules = new int[,,]
             {
-                {{0,2,2},{0,1,2},{0,1,1}},
-                {{0,1,2},{0,1,2},{0,0,1}},
-                {{0,1,2},{0,0,1},{0,0,1}}
+                {{2,0,0},{2,1,0},{2,1,1}},
+                {{2,1,0},{2,1,0},{2,2,1}},
+                {{2,1,0},{2,2,1},{2,2,1}}
             };
-        }
+
+         }
 
         /// <summary>
         /// Przeprowadzenie Analizy
@@ -143,19 +145,19 @@ namespace WeatherClothes.Views
             var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
             double[] Values = new double[4];
             SingleDimFuzzySet[] Sets = new SingleDimFuzzySet[4];
-            var tata = GetOpinion(input, out Values[0],out Sets[0], Norm.Zadeh);
-            var mama = GetOpinion(input, out Values[1],out Sets[1], Norm.Algebraic);
-            var babcia = GetOpinion(input, out Values[2],out Sets[2], Norm.Lukasiewicz);
-            var dziadek = GetOpinion(input, out Values[3],out Sets[3], Norm.Einstein);
-            
-            Result R = new Result(Temperature, WindSpeed, Moisture, Clothes, new[] { TemperatureDP, MoistureDP, WindSpeedDP, Values[0], Values[1], Values[2], Values[3] }, new[] { tata, mama, babcia, dziadek },Sets);
+            var tata = GetOpinion(input, out Values[0], out Sets[0], Norm.Zadeh);
+            var mama = GetOpinion(input, out Values[1], out Sets[1], Norm.Algebraic);
+            var babcia = GetOpinion(input, out Values[2], out Sets[2], Norm.Lukasiewicz);
+            var dziadek = GetOpinion(input, out Values[3], out Sets[3], Norm.Einstein);
+
+            Result R = new Result(Temperature, WindSpeed, Moisture, Clothes, new[] { TemperatureDP, MoistureDP, WindSpeedDP, Values[0], Values[1], Values[2], Values[3] }, new[] { tata, mama, babcia, dziadek }, Sets);
             this.Visibility = System.Windows.Visibility.Collapsed;
             R.ParentView = this;
             R.Show();
-          
+
         }
         public Window ParentView { get; set; }
-      
+
         private String GetOpinion(double[][] input, out double crispValue, out SingleDimFuzzySet clothesResult, Norm norm = Norm.Zadeh)
         {
             var RuleValueSets = CalculateRuleValues(input, norm);
@@ -163,7 +165,9 @@ namespace WeatherClothes.Views
             var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm), norm);
             var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 1, 0.000001);
             var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 1, 0.000001);
-            crispValue = r1 / r2; //Środek ciężkości wynikowego zbioru
+            var r3 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => x * ClothesResult[x], 0, 1, 10);
+            var r4 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => ClothesResult[x], 0, 1, 10);
+                crispValue = (r1+r3) / (r2+r4); //Środek ciężkości wynikowego zbioru
             clothesResult = ClothesResult;
             return Clothes.GetMaxLabel(crispValue, new double[] { ClothesResults[0][crispValue], ClothesResults[1][crispValue], ClothesResults[2][crispValue] }, norm);
         }
@@ -177,6 +181,7 @@ namespace WeatherClothes.Views
         private FuzzySet[] CalculateResultFuzzySets(FuzzySet[, ,] RuleValueSets, Norm norm = Norm.Zadeh)
         {
             var rfs = new FuzzySet[] { new FuzzySet(Clothes.GetFuzzySet(0)), new FuzzySet(Clothes.GetFuzzySet(1)), new FuzzySet(Clothes.GetFuzzySet(2)) };
+            bool[] Modified = new[] { false, false, false };
             for (int a = 0; a < 3; a++)
                 for (int b = 0; b < 3; b++)
                     for (int c = 0; c < 3; c++)
@@ -184,7 +189,15 @@ namespace WeatherClothes.Views
                         if (RuleValueSets[a, b, c] == null) continue;
                         var ind = Rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
                         rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm);
+                        Modified[ind] = true;
                     }
+            for (int i = 0; i < 3; i++)
+            {
+                if (!Modified[i])
+                {
+                    rfs[i] = rfs[i].IntersectWith(new FuzzySet(0), norm);
+                }
+            }
             return rfs;
         }
 
@@ -198,22 +211,30 @@ namespace WeatherClothes.Views
         {
             var result = new FuzzySet[3, 3, 3];
             for (int tInd = 0; tInd < 3; tInd++)
-                for (int mInd = 0; mInd < 3; mInd++)
-                    for (int wInd = 0; wInd < 3; wInd++)
-                    {
-                        //var tVal = Temperature.GetAttributeValue(tInd, input[0][tInd]);
-                        //var mVal = Moisture.GetAttributeValue(mInd, input[1][mInd]);
-                        //var wVal = WindSpeed.GetAttributeValue(wInd, input[2][wInd]);
-                        var tVal = input[0][tInd];
-                        var mVal = input[1][mInd];
-                        var wVal = input[2][wInd];
-                        if (tVal == 0 || mVal == 0 || wVal == 0) continue;
-                        //var t = tVal == 0 ? 1 : tVal;
-                        //var m = mVal == 0 ? 1 : mVal;
-                        //var w = wVal == 0 ? 1 : wVal;
-                        var val = Norms.ApplyTNorm(Norms.ApplyTNorm(tVal, mVal, norm), wVal, norm);
-                            result[wInd, mInd, tInd] = new FuzzySet(val);
-                    }
+            {
+                 var tVal = input[0][tInd];
+                 if (tVal == 0) continue;
+                 for (int mInd = 0; mInd < 3; mInd++)
+                 {
+                     var mVal = input[1][mInd];
+                     if (mVal == 0) continue;
+                     for (int wInd = 0; wInd < 3; wInd++)
+                     {
+                         //var tVal = Temperature.GetAttributeValue(tInd, input[0][tInd]);
+                         //var mVal = Moisture.GetAttributeValue(mInd, input[1][mInd]);
+                         //var wVal = WindSpeed.GetAttributeValue(wInd, input[2][wInd]);
+
+
+                         var wVal = input[2][wInd];
+                         if (tVal == 0 || mVal == 0 || wVal == 0) continue;
+                         //var t = tVal == 0 ? 1 : tVal;
+                         //var m = mVal == 0 ? 1 : mVal;
+                         //var w = wVal == 0 ? 1 : wVal;
+                         var val = Norms.ApplyTNorm(Norms.ApplyTNorm(tVal, mVal, norm), wVal, norm);
+                         result[wInd, mInd, tInd] = new FuzzySet(val);
+                     }
+                 }
+            }
             return result;
         }
 

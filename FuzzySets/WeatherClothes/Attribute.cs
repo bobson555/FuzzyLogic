@@ -63,6 +63,7 @@ namespace WeatherClothes
             if (weights.Count() != labels.Count()) throw new ArgumentException();
             String reslabel=null;
             var res = double.NegativeInfinity;
+            int resid = -1;
             for (int i = 0; i < attributes.Count; i++)
             {
                 var fset = attributes[i].IntersectWith(new FuzzySet(weights[i]), norm);
@@ -70,7 +71,15 @@ namespace WeatherClothes
                 {
                     reslabel = labels[i];
                     res = fset[val];
+                    resid = i;
                 }
+                else if (weights[i] > weights[resid])
+                {
+                    reslabel = labels[i];
+                    res = fset[val];
+                    resid = i;
+                }
+                
             }
             if (reslabel==null) throw new Exception("World ends");
             return reslabel;

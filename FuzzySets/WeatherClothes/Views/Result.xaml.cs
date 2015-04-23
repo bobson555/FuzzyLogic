@@ -59,7 +59,7 @@ namespace WeatherClothes.Views
                 case "winter":
                     return new Tuple<string, string>("/zima5.png", "Ubranie Zimowe");
                 case "summer":
-                    return new Tuple<string, string>("/lato5.png", "Ubranie Letne");
+                    return new Tuple<string, string>("/lato5.png", "Ubranie Letnie");
                 default:
                     throw new ArgumentException("Unrecognised label");
 

@@ -90,7 +90,7 @@ namespace WeatherClothes.Views
             Model.Series.Add(D);
 
            
-                var F = new OxyPlot.Series.FunctionSeries(x => (A.FLV(x)), x0, x1, Math.Abs(x1 - x0) / 1000,"FLV");
+                var F = new OxyPlot.Series.FunctionSeries(x => (A.FLV(x)), x0, x1, Math.Abs(x1 - x0) / 100000,"FLV");
                 F.Color = colors[2];
                 F.StrokeThickness = 0.75;
                 Model.Series.Add(F);
