@@ -47,7 +47,7 @@ namespace WeatherClothes.Views
             Mama = GetLabelDescription(labels[1]);
             Babcia = GetLabelDescription(labels[2]);
             Dziadek = GetLabelDescription(labels[3]);
-            Initialize();
+         
             InitializeComponent();
         }
         private Tuple<string, string> GetLabelDescription(string label)
@@ -68,13 +68,15 @@ namespace WeatherClothes.Views
         public void Initialize()
         {
             E = new Explaination(T, W, H, R, Values,Sets);
+            E.ParentView = this;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Visibility = System.Windows.Visibility.Collapsed;
-            E.ShowDialog();
-            this.Visibility = System.Windows.Visibility.Visible;
             Initialize();
+            this.Visibility = System.Windows.Visibility.Collapsed;
+            E.Show();
+
+        
 
             
         }

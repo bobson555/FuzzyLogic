@@ -125,6 +125,7 @@ namespace WeatherClothes.Views
              */
 
         }
+        public Window ParentView { get; set; }
         public Plot Plot1 { get; set; }
         public Plot Plot2 { get; set; }
         public Plot Plot3 { get; set; }
@@ -134,5 +135,11 @@ namespace WeatherClothes.Views
         public Plot PlotMum { get; set; }
         public Plot PlotGMum { get; set; }
         public Plot PlotGDad { get; set; }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ParentView != null && ParentView.IsEnabled) this.ParentView.Visibility = System.Windows.Visibility.Visible;
+
+        }
     }
 }
