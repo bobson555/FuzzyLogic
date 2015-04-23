@@ -96,19 +96,19 @@ namespace WeatherClothes.Views
             var moistureList = new List<String> { "Dry", "Wet", "Rain" };
             var clothesList = new List<String> { "Summer", "Spring", "Winter" };
 
-            var coldFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 18, 1);
-            var warmFSet = new TriangleFuzzySet(10, 18, 25, 1);
-            var hotFSet = new RightShoulderFuzzySet(18, 25, double.PositiveInfinity, 1);
+            var coldFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 5, 10, 1);
+            var warmFSet = new TriangleFuzzySet(5, 10, 20, 1);
+            var hotFSet = new RightShoulderFuzzySet(10, 20, double.PositiveInfinity, 1);
             var temperatureSets = new List<FuzzySet> { coldFSet.ToFuzzySet(), warmFSet.ToFuzzySet(), hotFSet.ToFuzzySet() };
 
             var noWindFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 10, 1);
-            var mildWindFSet = new TriangleFuzzySet(5, 10, 15, 1);
+            var mildWindFSet = new TriangleFuzzySet(0, 10, 15, 1);
             var strongWindFSet = new RightShoulderFuzzySet(10, 15, double.PositiveInfinity, 1);
             var windSets = new List<FuzzySet> { noWindFSet.ToFuzzySet(), mildWindFSet.ToFuzzySet(), strongWindFSet.ToFuzzySet() };
 
-            var dryFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 0.5, 1);
-            var moistFSet = new TriangleFuzzySet(0.25, 0.5, 0.75, 1);
-            var rainFSet = new RightShoulderFuzzySet(0.5, 0.75, double.PositiveInfinity, 1);
+            var dryFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0.1, 0.4, 1);
+            var moistFSet = new TriangleFuzzySet(0.1, 0.4, 0.75, 1);
+            var rainFSet = new RightShoulderFuzzySet(0.4, 0.75, double.PositiveInfinity, 1);
             var moistureSets = new List<FuzzySet> { dryFSet.ToFuzzySet(), moistFSet.ToFuzzySet(), rainFSet.ToFuzzySet() };
 
             var summerFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 1F/5F, 0.5, 1);
@@ -181,7 +181,7 @@ namespace WeatherClothes.Views
                 for (int b = 0; b < 3; b++)
                     for (int c = 0; c < 3; c++)
                     {
-                        //if (RuleValueSets[a, b, c] == null) continue;
+                        if (RuleValueSets[a, b, c] == null) continue;
                         var ind = Rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
                         rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm);
                     }
@@ -201,13 +201,17 @@ namespace WeatherClothes.Views
                 for (int mInd = 0; mInd < 3; mInd++)
                     for (int wInd = 0; wInd < 3; wInd++)
                     {
-                        var tVal = Temperature.GetAttributeValue(tInd, input[0][tInd]);
-                        var mVal = Moisture.GetAttributeValue(mInd, input[1][mInd]);
-                        var wVal = WindSpeed.GetAttributeValue(wInd, input[1][wInd]);
-                        var t = tVal == 0 ? 1 : tVal;
-                        var m = mVal == 0 ? 1 : mVal;
-                        var w = wVal == 0 ? 1 : wVal;
-                        var val = Norms.ApplyTNorm(Norms.ApplyTNorm(t, m, norm), w, norm);
+                        //var tVal = Temperature.GetAttributeValue(tInd, input[0][tInd]);
+                        //var mVal = Moisture.GetAttributeValue(mInd, input[1][mInd]);
+                        //var wVal = WindSpeed.GetAttributeValue(wInd, input[2][wInd]);
+                        var tVal = input[0][tInd];
+                        var mVal = input[1][mInd];
+                        var wVal = input[2][wInd];
+                        if (tVal == 0 || mVal == 0 || wVal == 0) continue;
+                        //var t = tVal == 0 ? 1 : tVal;
+                        //var m = mVal == 0 ? 1 : mVal;
+                        //var w = wVal == 0 ? 1 : wVal;
+                        var val = Norms.ApplyTNorm(Norms.ApplyTNorm(tVal, mVal, norm), wVal, norm);
                             result[wInd, mInd, tInd] = new FuzzySet(val);
                     }
             return result;
