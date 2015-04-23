@@ -1,0 +1,4 @@
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\bin\Debug\FuzzySets.dll
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\bin\Debug\FuzzySets.pdb
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\obj\Debug\FuzzySets.dll
+C:\Users\Patryk\FuzzyLogic\FuzzySets\FuzzySets\obj\Debug\FuzzySets.pdb
