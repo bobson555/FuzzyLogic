@@ -112,11 +112,11 @@ namespace WeatherClothes.Views
             List<OxyPlot.OxyColor> AdditionalColors = new List<OxyPlot.OxyColor>();
             AdditionalColors.AddRange(Colors);
             AdditionalColors.AddRange(new OxyPlot.OxyColor[] { OxyPlot.OxyColor.FromRgb(255, 0, 255), OxyPlot.OxyColor.FromRgb(0x99, 0x33, 0), OxyPlot.OxyColor.FromRgb(0, 0x33, 0x69) });
-            Plot4 = new Plot("Wynik", R, 0, 100, new double[] { Values[3], Values[4], Values[5], Values[6] },  AdditionalColors.ToArray(), new[] { "Tata - Zadeh", "Mama - Algebraic", "Babcia - Lukasiewicz", "Dziadek - Einstein" });
-            PlotDad = new Plot("Tata-Zadeh", Sets[0], 0, 100, Values[3], AdditionalColors.ToArray());
-            PlotMum = new Plot("Mama-Algebraiczna", Sets[1], 0, 100, Values[4], AdditionalColors.ToArray());
-            PlotGMum = new Plot("Babcia-Lukasiewicz", Sets[2], 0, 100, Values[5], AdditionalColors.ToArray());
-            PlotGDad= new Plot("Dziadek-Einstein", Sets[3], 0, 100, Values[6], AdditionalColors.ToArray());
+            Plot4 = new Plot("Wynik", R, 0, 1, new double[] { Values[3], Values[4], Values[5], Values[6] },  AdditionalColors.ToArray(), new[] { "Tata - Zadeh", "Mama - Algebraic", "Babcia - Lukasiewicz", "Dziadek - Einstein" });
+            PlotDad = new Plot("Tata-Zadeh", Sets[0], 0, 1, Values[3], AdditionalColors.ToArray());
+            PlotMum = new Plot("Mama-Algebraiczna", Sets[1], 0, 1, Values[4], AdditionalColors.ToArray());
+            PlotGMum = new Plot("Babcia-Lukasiewicz", Sets[2], 0, 1, Values[5], AdditionalColors.ToArray());
+            PlotGDad= new Plot("Dziadek-Einstein", Sets[3], 0, 1, Values[6], AdditionalColors.ToArray());
             DataContext = this;
             InitializeComponent();
             /*
