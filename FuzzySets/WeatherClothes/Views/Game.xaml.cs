@@ -96,8 +96,8 @@ namespace WeatherClothes.Views
             var moistureList = new List<String> { "Dry", "Wet", "Rain" };
             var clothesList = new List<String> { "Summer", "Spring", "Winter" };
 
-            var coldFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 5, 10, 1);
-            var warmFSet = new TriangleFuzzySet(5, 10, 20, 1);
+            var coldFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 0, 10, 1);
+            var warmFSet = new TriangleFuzzySet(0, 10, 20, 1);
             var hotFSet = new RightShoulderFuzzySet(10, 20, double.PositiveInfinity, 1);
             var temperatureSets = new List<FuzzySet> { coldFSet.ToFuzzySet(), warmFSet.ToFuzzySet(), hotFSet.ToFuzzySet() };
 
@@ -111,9 +111,9 @@ namespace WeatherClothes.Views
             var rainFSet = new RightShoulderFuzzySet(0.4, 0.75, double.PositiveInfinity, 1);
             var moistureSets = new List<FuzzySet> { dryFSet.ToFuzzySet(), moistFSet.ToFuzzySet(), rainFSet.ToFuzzySet() };
 
-            var summerFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 1F/5F, 0.5, 1);
-            var springFSet = new TriangleFuzzySet(1F/5F, 0.5, 4F/5F, 1);
-            var winterFSet = new RightShoulderFuzzySet(0.5, 4F/5F, double.PositiveInfinity, 1);
+            var summerFSet = new LeftShoulderFuzzySet(double.NegativeInfinity, 1F/5F, 0.4, 1);
+            var springFSet = new TriangleFuzzySet(1F/5F, 0.4, 3F/5F, 1);
+            var winterFSet = new RightShoulderFuzzySet(0.4, 3F/5F, double.PositiveInfinity, 1);
             var clothesSets = new List<FuzzySet> { summerFSet.ToFuzzySet(), springFSet.ToFuzzySet(), winterFSet.ToFuzzySet() };
 
             Temperature = new Attribute(temperatureList, temperatureSets);
