@@ -106,8 +106,8 @@ namespace WeatherClothes.Views
         public Explaination(Attribute T, Attribute W, Attribute H, Attribute R, double[] Values,SingleDimFuzzySet[] Sets)
         {
             var Colors = new OxyPlot.OxyColor[] { OxyPlot.OxyColor.FromRgb(0, 0, 255), OxyPlot.OxyColor.FromRgb(0, 255, 0), OxyPlot.OxyColor.FromRgb(255, 0, 0), OxyPlot.OxyColor.FromRgb(13, 34, 15) };
-            Plot1 = new Plot("Temperatura", T, -10, 32, Values[0], Colors);
-            Plot2 = new Plot("Prędkość Wiatru", W, 0, 20, Values[2], Colors);
+            Plot1 = new Plot("Temperatura", T, Math.Min(-10,Values[0]),Math.Max(Values[0], 32), Values[0], Colors);
+            Plot2 = new Plot("Prędkość Wiatru", W, 0, Math.Max(Values[2],20), Values[2], Colors);
             Plot3 = new Plot("Wilgotność Powietrza", H, 0, 1, Values[1], Colors);
             List<OxyPlot.OxyColor> AdditionalColors = new List<OxyPlot.OxyColor>();
             AdditionalColors.AddRange(Colors);
