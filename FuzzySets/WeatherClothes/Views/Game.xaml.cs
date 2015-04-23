@@ -161,8 +161,8 @@ namespace WeatherClothes.Views
             var RuleValueSets = CalculateRuleValues(input, norm);
             var ClothesResults = CalculateResultFuzzySets(RuleValueSets, norm);
             var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm), norm);
-            var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 1, 0.00001);
-            var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 1, 0.00001);
+            var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 1, 0.000001);
+            var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 1, 0.000001);
             crispValue = r1 / r2; //Środek ciężkości wynikowego zbioru
             clothesResult = ClothesResult;
             return Clothes.GetMaxLabel(crispValue, new double[] { ClothesResults[0][crispValue], ClothesResults[1][crispValue], ClothesResults[2][crispValue] }, norm);
