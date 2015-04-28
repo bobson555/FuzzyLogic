@@ -163,15 +163,9 @@ namespace WeatherClothes.Views
             var RuleValueSets = CalculateRuleValues(input, norm);
             var ClothesResults = CalculateResultFuzzySets(RuleValueSets, norm);
             var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm), norm);
-            var r1 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => x * ClothesResult[x], 0, 1, 0.000001);
-            var r2 = MathNet.Numerics.Integration.NewtonCotesTrapeziumRule.IntegrateAdaptive(x => ClothesResult[x], 0, 1, 0.000001);
-            if (r2 == 0)
-            {
-                var r3 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => x * ClothesResult[x], 0, 1, 10);
-                var r4 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => ClothesResult[x], 0, 1, 10);
-                crispValue = r4==0?0.5:(r1 + r3) / (r2 + r4);
-            }
-            else crispValue = r1/r2; //Środek ciężkości wynikowego zbioru
+            var r1 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => x * ClothesResult[x], 0, 1, 42);
+            var r2 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => ClothesResult[x], 0, 1, 42);
+            crispValue = r2==0?0.5:r1/r2; //Środek ciężkości wynikowego zbioru
             clothesResult = ClothesResult;
             return Clothes.GetMaxLabel(crispValue, new double[] { ClothesResults[0][crispValue], ClothesResults[1][crispValue], ClothesResults[2][crispValue] }, norm);
         }

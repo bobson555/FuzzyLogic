@@ -67,13 +67,20 @@ namespace WeatherClothes
             for (int i = 0; i < attributes.Count; i++)
             {
                 var fset = attributes[i].IntersectWith(new FuzzySet(weights[i]), norm);
-                if (fset[val] > res)
+                var fval = fset[val];
+                if (fval > res)
                 {
                     reslabel = labels[i];
-                    res = fset[val];
+                    res = fval;
                     resid = i;
                 }
-                else if (weights[i] > weights[resid])
+                else if (fval == res && attributes[i][val] > attributes[resid][val])
+                {
+                    reslabel = labels[i];
+                    res = fval;
+                    resid = i;
+                }
+                else if (fset[val] == res && weights[i] > weights[resid])
                 {
                     reslabel = labels[i];
                     res = fset[val];

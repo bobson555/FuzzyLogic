@@ -83,7 +83,11 @@ namespace WeatherClothes.Views
         public Window ParentView { get; set; }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (ParentView != null) ParentView.Visibility = System.Windows.Visibility.Visible;
+            if (ParentView != null)
+            {
+                ParentView.Visibility = System.Windows.Visibility.Visible;
+                ParentView.WindowState = System.Windows.WindowState.Normal;
+            }
         }
         
     }

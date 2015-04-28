@@ -167,6 +167,11 @@
     <Resource Include="wiosna5.png" />
     <Resource Include="zima5.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="logo5.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

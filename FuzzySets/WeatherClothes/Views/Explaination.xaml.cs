@@ -106,23 +106,20 @@ namespace WeatherClothes.Views
         public Explaination(Attribute T, Attribute W, Attribute H, Attribute R, double[] Values,SingleDimFuzzySet[] Sets)
         {
             var Colors = new OxyPlot.OxyColor[] { OxyPlot.OxyColor.FromRgb(0, 0, 255), OxyPlot.OxyColor.FromRgb(0, 255, 0), OxyPlot.OxyColor.FromRgb(255, 0, 0), OxyPlot.OxyColor.FromRgb(13, 34, 15) };
-            Plot1 = new Plot("Temperatura", T, Math.Min(-10,Values[0]),Math.Max(Values[0], 32), Values[0], Colors);
-            Plot2 = new Plot("Prędkość Wiatru", W, 0, Math.Max(Values[2],20), Values[2], Colors);
-            Plot3 = new Plot("Wilgotność Powietrza", H, 0, 1, Values[1], Colors);
+            Plot1 = new Plot("Temperature", T, Math.Min(-10,Values[0]),Math.Max(Values[0], 32), Values[0], Colors);
+            Plot2 = new Plot("Wind Speed", W, 0, Math.Max(Values[2],20), Values[2], Colors);
+            Plot3 = new Plot("Humidity", H, 0, 1, Values[1], Colors);
             List<OxyPlot.OxyColor> AdditionalColors = new List<OxyPlot.OxyColor>();
             AdditionalColors.AddRange(Colors);
             AdditionalColors.AddRange(new OxyPlot.OxyColor[] { OxyPlot.OxyColor.FromRgb(255, 0, 255), OxyPlot.OxyColor.FromRgb(0x99, 0x33, 0), OxyPlot.OxyColor.FromRgb(0, 0x33, 0x69) });
-            Plot4 = new Plot("Wynik", R, 0, 1, new double[] { Values[3], Values[4], Values[5], Values[6] },  AdditionalColors.ToArray(), new[] { "Tata - Zadeh", "Mama - Algebraic", "Babcia - Lukasiewicz", "Dziadek - Einstein" });
-            PlotDad = new Plot("Tata-Zadeh", Sets[0], 0, 1, Values[3], AdditionalColors.ToArray());
-            PlotMum = new Plot("Mama-Algebraiczna", Sets[1], 0, 1, Values[4], AdditionalColors.ToArray());
-            PlotGMum = new Plot("Babcia-Lukasiewicz", Sets[2], 0, 1, Values[5], AdditionalColors.ToArray());
-            PlotGDad= new Plot("Dziadek-Einstein", Sets[3], 0, 1, Values[6], AdditionalColors.ToArray());
+            Plot4 = new Plot("Result", R, 0, 1, new double[] { Values[3], Values[4], Values[5], Values[6] },  AdditionalColors.ToArray(), new[] { "Dad - Zadeh", "Mum - Algebraic", "Grandma - Lukasiewicz", "Grandad - Einstein" });
+            PlotDad = new Plot("Dad-Zadeh", Sets[0], 0, 1, Values[3], AdditionalColors.ToArray());
+            PlotMum = new Plot("Mum-Algebraic", Sets[1], 0, 1, Values[4], AdditionalColors.ToArray());
+            PlotGMum = new Plot("Grandma-Lukasiewicz", Sets[2], 0, 1, Values[5], AdditionalColors.ToArray());
+            PlotGDad= new Plot("Grandad-Einstein", Sets[3], 0, 1, Values[6], AdditionalColors.ToArray());
             DataContext = this;
             InitializeComponent();
-            /*
-             * 2 karty - 1. karta wykresy z dok 2. karta do wyboru zakładka z normą i tam wykres wynikowy wyliczony każdą normą
-             * 
-             */
+          
 
         }
         public Window ParentView { get; set; }
@@ -138,7 +135,13 @@ namespace WeatherClothes.Views
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (ParentView != null && ParentView.IsEnabled) this.ParentView.Visibility = System.Windows.Visibility.Visible;
+            if (ParentView != null)
+            {
+                this.ParentView.WindowState = System.Windows.WindowState.Maximized;
+                this.ParentView.Visibility = System.Windows.Visibility.Visible;
+                
+              
+            }
 
         }
     }

@@ -43,7 +43,10 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-            <Canvas x:Name="Canvas1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
+        <Border x:Name="Border1"  Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4">
+            <Image Source="/logo5.png" Width="{Binding ElementName=Border1,Path=ActualWidth}" Height="{Binding ElementName=Border1,Path=ActualHeight}"/>
+        </Border>
+        <Canvas x:Name="Canvas1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
             <Rectangle Fill="LavenderBlush" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas1, Path=ActualHeight}" Width="{Binding ElementName=Canvas1, Path=ActualWidth}"/>
             <StackPanel Orientation="Vertical">
                 <Border BorderBrush="{x:Null}" >
