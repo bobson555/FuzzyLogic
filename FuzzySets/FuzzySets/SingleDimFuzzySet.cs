@@ -13,12 +13,12 @@ namespace FuzzySets
             return Complement(s);
         }
 
-        public SingleDimFuzzySet()
+        protected SingleDimFuzzySet()
         { }
 
         public FuzzySet ToFuzzySet()
         {
-            return new FuzzySet(x => this.FLV(x));
+            return new FuzzySet(FLV);
         }
 
         public abstract double FLV(double value);
@@ -26,7 +26,7 @@ namespace FuzzySets
         public override double FLV(IEnumerable<double> value)
         {
             if (value.Count<double>() == 1) return FLV(value.First());
-            else throw new ArgumentException();
+            throw new ArgumentException();
         }
 
         public double this[double value]
@@ -37,22 +37,22 @@ namespace FuzzySets
             }
         }
 
-        public static FuzzySet Intersection(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm)
+        public static FuzzySet Intersection(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm = Norm.Zadeh)
         {
             return new FuzzySet(x => Norms.ApplyTNorm(s1.FLV(x), s2.FLV(x), norm));
         }
 
-        public static FuzzySet Union(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm)
+        public static FuzzySet Union(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm = Norm.Zadeh)
         {
             return new FuzzySet(x=> Norms.ApplySNorm(s1.FLV(x), s2.FLV(x), norm));
         }
 
-        public FuzzySet UnionWith(SingleDimFuzzySet other, Norm norm)
+        public FuzzySet UnionWith(SingleDimFuzzySet other, Norm norm = Norm.Zadeh)
         {
             return FuzzySet.Union(this, other, norm);
         }
 
-        public FuzzySet IntersectWith(SingleDimFuzzySet other, Norm norm)
+        public FuzzySet IntersectWith(SingleDimFuzzySet other, Norm norm = Norm.Zadeh)
         {
             return FuzzySet.Intersection(this, other, norm);
         }

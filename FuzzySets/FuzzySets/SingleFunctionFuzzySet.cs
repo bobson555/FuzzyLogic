@@ -1,30 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzySets
 {
     public class SingleFunctionFuzzySet : MultiDimFuzzySet
     {
 
-        public SingleFunctionFuzzySet(Func<double, double> flv)
-            : base()
+        public SingleFunctionFuzzySet(Func<double, double> flv, int dim = 1)
         {
-            this._flv = x =>
+            _flv = x =>
             {
-                if (x.Count<double>() != 1) throw new ArgumentException();
-                return flv(x.First()); //Czy jest potrzebne
+                if (x.Count() != 1) throw new ArgumentException();
+                return flv(x.First());
             };
-            this.Dim = 1;
+            Dim = 1;
         }
 
         public SingleFunctionFuzzySet(Func<IEnumerable<double>, double> flv, int dim)
-            : base()
         {
-            this._flv = flv;
-            this.Dim = dim;
+            _flv = flv;
+            Dim = dim;
         }
 
         public SingleFunctionFuzzySet(SingleDimFuzzySet s)
@@ -40,7 +36,7 @@ namespace FuzzySets
 
         public override double FLV(IEnumerable<double> value)
         {
-            if (value.Count<double>() != this.Dim) throw new ArgumentException();
+            if (value.Count() != Dim) throw new ArgumentException();
             return _flv(value);
         }
     }

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzySets
 {
     public class FuzzySet:SingleDimFuzzySet
     {
-        Func<double, double> _flv;
+        readonly Func<double, double> _flv;
 
         public override double FLV(double value)
         {
@@ -17,33 +15,48 @@ namespace FuzzySets
 
         public FuzzySet(double val = 0)
         {
-            this._flv = x => val;
+            _flv = x => val;
         }
 
         public FuzzySet(Func<double, double> flv)
         {
-            this._flv = flv;
+            _flv = flv;
         }
 
-        public FuzzySet()
+        public FuzzySet() : this(0)
         {
-            this._flv = x => 0;
+        }
+
+        public FuzzySet(MultiDimFuzzySet s)
+        {
+            if (s.Dim!=1) throw new InvalidCastException();
+            var l = new List<double>();
+            for(int i=1; i<s.Dim; i++) l.Add(0);
+            _flv = x =>
+            {
+                var l2 = new List<double> {x};
+                l2.AddRange(l);
+                return s.FLV(l2);
+            };
         }
 
         public FuzzySet(MultiDimFuzzySet s, IEnumerable<double> offset, int dim)
         {
-            var l = new List<double>();
-            var off = offset.ToArray();
-            for (int i = 0; i < s.Dim; i++)
+            //var l = new List<double>();
+            if (offset.Count() != s.Dim || dim >= s.Dim || dim < 0) throw new ArgumentException();
+            var l = offset.Select(x => -x).ToArray();
+            _flv = x =>
             {
-                l.Add(-off[i]);
-            }
-            this._flv = x => { l[dim-1] += x; return s.FLV(l); };
+                var l2 = new double[l.Length];
+                l.CopyTo(l2, 0);
+                l2[dim] += x;
+                return s.FLV(l2);
+            };
         }
 
         public FuzzySet(SingleDimFuzzySet fuzzySet)
         {
-            this._flv = x => fuzzySet.FLV(x);
+            _flv = fuzzySet.FLV;
         }
 
 
