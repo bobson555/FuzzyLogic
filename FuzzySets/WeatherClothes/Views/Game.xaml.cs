@@ -22,7 +22,7 @@ namespace WeatherClothes.Views
     public partial class Game : Window, INotifyPropertyChanged
     {
         Attribute Temperature;
-        Attribute Moisture;
+        Attribute Humidity;
         Attribute WindSpeed;
         Attribute Clothes;
         int[, ,] Rules;
@@ -118,7 +118,7 @@ namespace WeatherClothes.Views
 
             Temperature = new Attribute(temperatureList, temperatureSets);
             WindSpeed = new Attribute(windSpeedList, windSets);
-            Moisture = new Attribute(moistureList, moistureSets);
+            Humidity = new Attribute(moistureList, moistureSets);
             Clothes = new Attribute(clothesList, clothesSets);
 
 
@@ -139,7 +139,7 @@ namespace WeatherClothes.Views
         private void Analyze_Click(object sender, RoutedEventArgs e)
         {
             var temperatureArr = Temperature[TemperatureDP];
-            var moistureArr = Moisture[MoistureDP];
+            var moistureArr = Humidity[MoistureDP];
             var windSpeedArr = WindSpeed[WindSpeedDP];
 
             var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
@@ -150,7 +150,7 @@ namespace WeatherClothes.Views
             var babcia = GetOpinion(input, out Values[2], out Sets[2], Norm.Lukasiewicz);
             var dziadek = GetOpinion(input, out Values[3], out Sets[3], Norm.Einstein);
 
-            Result R = new Result(Temperature, WindSpeed, Moisture, Clothes, new[] { TemperatureDP, MoistureDP, WindSpeedDP, Values[0], Values[1], Values[2], Values[3] }, new[] { tata, mama, babcia, dziadek }, Sets);
+            Result R = new Result(Temperature, WindSpeed, Humidity, Clothes, new[] { TemperatureDP, MoistureDP, WindSpeedDP, Values[0], Values[1], Values[2], Values[3] }, new[] { tata, mama, babcia, dziadek }, Sets);
             this.Visibility = System.Windows.Visibility.Collapsed;
             R.ParentView = this;
             R.Show();
@@ -173,7 +173,7 @@ namespace WeatherClothes.Views
             var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm), norm);
             var r1 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => x * ClothesResult[x], 0, 1, 42);
             var r2 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => ClothesResult[x], 0, 1, 42);
-            crispValue = r2==0?0.5:r1/r2; //Środek ciężkości wynikowego zbioru
+            crispValue = r2 == 0 ? 0.5 : r1 / r2; //Środek ciężkości wynikowego zbioru
             clothesResult = ClothesResult;
             return Clothes.GetMaxLabel(crispValue, new double[] { ClothesResults[0][crispValue], ClothesResults[1][crispValue], ClothesResults[2][crispValue] }, norm);
         }
