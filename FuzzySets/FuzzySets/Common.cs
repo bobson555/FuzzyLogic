@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FuzzySets
 {
+    /// <summary>
+    /// Implemented norms
+    /// </summary>
     public enum Norm
     {
         Zadeh,
@@ -15,8 +13,22 @@ namespace FuzzySets
         Lukasiewicz
     }
 
+    /// <summary>
+    /// Implements computing of S- and T-norms
+    /// </summary>
     public static class Norms
     {
+        /// <summary>
+        /// Applies given S-Norm to given values
+        /// Zadeh - max(a,b)
+        /// Algebraic - a+b-a*b
+        /// Lukasiewicz - Min(1,a+b)
+        /// Einstein - (a+b)/(1+a*b)
+        /// </summary>
+        /// <param name="a">Input value</param>
+        /// <param name="b">Input value</param>
+        /// <param name="norm">Input norm</param>
+        /// <returns>Value of a norm</returns>
         public static double ApplySNorm(double a, double b, Norm norm=Norm.Zadeh)
         {
             switch (norm)
@@ -32,6 +44,18 @@ namespace FuzzySets
                 default: throw new InvalidOperationException();
             }
         }
+
+        /// <summary>
+        /// Applies given T-Norm to given values
+        /// Zadeh - Min(a,b)
+        /// Algebraic - a*b
+        /// Lukasiewicz - Max(0,a+b-1)
+        /// Einstein - (a*b)/(2-(a+b-a*b))
+        /// </summary>
+        /// <param name="a">Input value</param>
+        /// <param name="b">Input value</param>
+        /// <param name="norm">Input norm</param>
+        /// <returns>Value of a norm</returns>
         public static double ApplyTNorm(double a, double b, Norm norm = Norm.Zadeh)
         {
             switch (norm)

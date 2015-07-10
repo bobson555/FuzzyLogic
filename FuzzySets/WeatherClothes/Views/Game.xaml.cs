@@ -132,7 +132,7 @@ namespace WeatherClothes.Views
          }
 
         /// <summary>
-        /// Przeprowadzenie Analizy
+        /// Performs an analysis.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -158,6 +158,14 @@ namespace WeatherClothes.Views
         }
         public Window ParentView { get; set; }
 
+        /// <summary>
+        /// Calculates crisp values of an analysis and interprets it.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="crispValue"></param>
+        /// <param name="clothesResult"></param>
+        /// <param name="norm"></param>
+        /// <returns></returns>
         private String GetOpinion(double[][] input, out double crispValue, out SingleDimFuzzySet clothesResult, Norm norm = Norm.Zadeh)
         {
             var RuleValueSets = CalculateRuleValues(input, norm);
@@ -171,7 +179,7 @@ namespace WeatherClothes.Views
         }
 
         /// <summary>
-        /// Obliczenie wynikowego zbioru rozmytego
+        /// Calculate output fuzzy set.
         /// </summary>
         /// <param name="RuleValueSets"></param>
         /// <param name="norm"></param>
@@ -186,21 +194,21 @@ namespace WeatherClothes.Views
                     {
                         if (RuleValueSets[a, b, c] == null) continue;
                         var ind = Rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
-                        rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm);
+                        rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm).ToFuzzySet();
                         Modified[ind] = true;
                     }
             for (int i = 0; i < 3; i++)
             {
                 if (!Modified[i])
                 {
-                    rfs[i] = rfs[i].IntersectWith(new FuzzySet(0), norm);
+                    rfs[i] = rfs[i].IntersectWith(new FuzzySet(0), norm).ToFuzzySet();
                 }
             }
             return rfs;
         }
 
         /// <summary>
-        /// Obliczneie przynależności do zbiorów Clothes na podstawie Rules
+        /// Calculating membership to "Clothes" fuzzy sets based on Rules array.
         /// </summary>
         /// <param name="input"></param>
         /// <param name="norm"></param>
