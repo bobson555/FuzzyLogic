@@ -1,10 +1,8 @@
-﻿<Window x:Class="WeatherClothes.MainWindow"
+﻿<Window x:Class="WeatherClothes.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:l ="clr-namespace:WeatherClothes"
-        Title="Doradca Pogodowy" Height="350" Width="525" Background="AliceBlue" Closing="Window_Closing">
+        Title="Weather Advisor" Height="350" Width="525" Background="AliceBlue" Closing="Window_Closing">
     <Window.Resources>
-        <l:ImageConverter x:Key="ImageConverter"/>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
@@ -44,7 +42,7 @@
                     Start
                 </Button>
                 <Button Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" FontWeight="ExtraBold" FontSize="18" FontFamily="Century Gothic" Click="Button2_Click" Style="{StaticResource ResourceKey=ButtonStyle}">
-                    Wyjdź
+                    Exit
                 </Button>
     </Grid>
 </Window>

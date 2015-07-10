@@ -12,7 +12,7 @@ namespace FuzzySets
         public double StartValue { get; private set; }
         public double EndValue { get; private set; }
 
-        public Func<double, double> FunctionFLV { get; private set; }
+        public Func<double, double> FunctionFlv { get; private set; }
 
         public LinearSegment(double start, double startValue, double end, double endValue, bool leftClosed = true, bool rightClosed = true)
         {
@@ -26,22 +26,22 @@ namespace FuzzySets
             double a = Math.Abs(start - end) < ComparisonTolerance ? 0 : (startValue - endValue) / (start - end);
             if (double.IsNaN(a)) a = 0;
             double b = startValue - a * (double.IsInfinity(start)||double.IsNegativeInfinity(start)?0:start);
-            FunctionFLV = x => a * x + b;
+            FunctionFlv = x => a * x + b;
         }
-        public double FLV(double x)
+        public double Flv(double x)
         {
-            if (FunctionFLV == null || x < Start || x > End) return 0;
-            if (IsIncreasing && (FunctionFLV(x) < StartValue || FunctionFLV(x) > EndValue)) throw new ArgumentOutOfRangeException();
-            if (IsDecreasing && (FunctionFLV(x) > StartValue || FunctionFLV(x) < EndValue)) throw new ArgumentOutOfRangeException();
-            if (IsSingleValued && (Math.Abs(FunctionFLV(x) - StartValue) > ComparisonTolerance || Math.Abs(StartValue - EndValue) > ComparisonTolerance)) throw new ArgumentOutOfRangeException();
-            return FunctionFLV(x);
+            if (FunctionFlv == null || x < Start || x > End) return 0;
+            if (IsIncreasing && (FunctionFlv(x) < StartValue || FunctionFlv(x) > EndValue)) throw new ArgumentOutOfRangeException();
+            if (IsDecreasing && (FunctionFlv(x) > StartValue || FunctionFlv(x) < EndValue)) throw new ArgumentOutOfRangeException();
+            if (IsSingleValued && (Math.Abs(FunctionFlv(x) - StartValue) > ComparisonTolerance || Math.Abs(StartValue - EndValue) > ComparisonTolerance)) throw new ArgumentOutOfRangeException();
+            return FunctionFlv(x);
             //return R;
         }
         public double this[double value]
         {
             get
             {
-                return FLV(value);
+                return Flv(value);
             }
         }
 
@@ -83,7 +83,7 @@ namespace FuzzySets
             _segments = s;
         }
 
-        public override double FLV(double value)
+        public override double Flv(double value)
         {
             var seg = _segments.Find(x => x.IsInside(value));
             return seg == null ? 0 : seg[value];

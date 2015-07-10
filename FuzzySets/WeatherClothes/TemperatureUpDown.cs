@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xceed.Wpf.Toolkit;
 
 namespace WeatherClothes
@@ -11,9 +7,9 @@ namespace WeatherClothes
     {
         protected override string ConvertValueToText()
         {
-           var S = base.ConvertValueToText();
-           S += "°C";
-           return S;
+           var s = base.ConvertValueToText();
+           s += "°C";
+           return s;
         }
        
     }
@@ -21,15 +17,14 @@ namespace WeatherClothes
     {
         public String Unit { get; set; }
         public SpeedUpDown()
-            : base()
         {
             Unit = "m/s";
         }
         protected override string ConvertValueToText()
         {
-            var S = base.ConvertValueToText();
-            S += Unit;
-            return S;
+            var s = base.ConvertValueToText();
+            s += Unit;
+            return s;
         }
     }
 }

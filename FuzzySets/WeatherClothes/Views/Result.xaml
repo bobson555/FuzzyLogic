@@ -66,8 +66,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Border BorderBrush="{x:Null}" >
-                    <TextBlock x:Name="TextBlock1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasTata}" >
-                        Tata Poleca
+                    <TextBlock x:Name="TextBlock1" FontSize="16" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasTata}" >
+                        Dad Proposes
                     </TextBlock>
                 </Border>
                 <Image Source="{Binding Tata.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasTata, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasTata, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
@@ -88,8 +88,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Border BorderBrush="{x:Null}" >
-                    <TextBlock x:Name="TextBlockMama1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasMama}" >
-                        Mama Poleca
+                    <TextBlock x:Name="TextBlockMama1" FontSize="16" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasMama}" >
+                        Mum Proposes
                     </TextBlock>
                 </Border>
                 <Image Source="{Binding Mama.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasMama, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasMama, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
@@ -110,8 +110,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Border BorderBrush="{x:Null}" >
-                    <TextBlock x:Name="TextBlockBabcia1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasBabcia}" >
-                        Babcia Poleca
+                    <TextBlock x:Name="TextBlockBabcia1" FontSize="16" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasBabcia}" >
+                        Grandma Proposes
                     </TextBlock>
                 </Border>
                 <Image Source="{Binding Babcia.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasBabcia, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasBabcia, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
@@ -132,8 +132,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Border BorderBrush="{x:Null}" >
-                    <TextBlock x:Name="TextBlockDziadek1" Grid.Row="0"  FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasDziadek}" >
-                        Dziadek Poleca
+                    <TextBlock x:Name="TextBlockDziadek1" FontSize="16" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=CanvasDziadek}" >
+                        Grandpa Proposes
                     </TextBlock>
                 </Border>
                 <Image Source="{Binding Dziadek.Item1}" Grid.Row="1" Grid.RowSpan="3" Width="{Binding ElementName=CanvasDziadek, Path=ActualHeight,Converter={StaticResource ResourceKey=ImageValueConverter}}" Height="{Binding ElementName=CanvasDziadek, Path=ActualHeight,Converter={StaticResource ResourceKey=HalfValueConverter}}" Stretch="Fill"/>
@@ -143,6 +143,6 @@
 
             </Grid>
         </Canvas>
-        <Button Grid.ColumnSpan="4" Content="Wyjaśnij" Grid.Column="4"  Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Row="7" Click="Button_Click"/>
+        <Button Grid.ColumnSpan="4" Content="Explain" Grid.Column="4"  Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Row="6" Click="Button_Click"/>
      </Grid>
 </Window>

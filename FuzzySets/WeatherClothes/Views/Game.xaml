@@ -3,11 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:l ="clr-namespace:WeatherClothes"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        Title="Game" Height="500" Width="400" Background="AliceBlue" MinHeight="400" MinWidth="500" Closing="Window_Closing_1">
+        Title="Weather Advisor" Height="500" Width="400" Background="AliceBlue" MinHeight="400" MinWidth="500" Closing="Window_Closing_1">
     <Window.Resources>
-        <l:HalfValueConverter x:Key="HalfValueConverter"/>
-        
-            <Style x:Key="ButtonStyle" TargetType="Button">
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -50,26 +49,18 @@
             <Rectangle Fill="LavenderBlush" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas1, Path=ActualHeight}" Width="{Binding ElementName=Canvas1, Path=ActualWidth}"/>
             <StackPanel Orientation="Vertical">
                 <Border BorderBrush="{x:Null}" >
-                <TextBlock x:Name="TextBlock1" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas1}" >
-                
-                </TextBlock>
-            </Border>
-                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-273" Value="{Binding TemperatureDP, Mode=TwoWay}" FormatString="D0"  Maximum="100" Width="100" >
-                    
-                </l:TemperatureUpDown>
+                <TextBlock x:Name="TextBlock1" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas1}" />
+                </Border>
+                <l:TemperatureUpDown x:Name="Iupdown1" Minimum="-273" Value="{Binding TemperatureDp, Mode=TwoWay}" FormatString="D0"  Maximum="100" Width="100" />
             </StackPanel>
         </Canvas>
         <Canvas x:Name="Canvas2" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Stretch" >
             <Rectangle Fill="GreenYellow" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas1, Path=ActualHeight}" Width="{Binding ElementName=Canvas2, Path=ActualWidth}"/>
             <StackPanel Orientation="Vertical">
                 <Border BorderBrush="{x:Null}" >
-                    <TextBlock x:Name="TextBlock2" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas2}" >
-
-                    </TextBlock>
+                    <TextBlock x:Name="TextBlock2" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas2}" />
                 </Border>
-                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="{Binding WindSpeedDP,Mode=TwoWay}" Maximum="40" Width="100" >
-
-                </l:SpeedUpDown>
+                <l:SpeedUpDown x:Name="Iupdown2" FormatString="D0" Minimum="0" Value="{Binding WindSpeedDp,Mode=TwoWay}" Maximum="40" Width="100" />
             </StackPanel>
         </Canvas>
     
@@ -77,17 +68,11 @@
         <Rectangle Fill="Aquamarine" Stroke="Black" RadiusX="50" RadiusY="50" Height="{Binding ElementName=Canvas3, Path=ActualHeight}" Width="{Binding ElementName=Canvas3, Path=ActualWidth}"/>
         <StackPanel Orientation="Vertical">
             <Border BorderBrush="{x:Null}" >
-                    <TextBlock x:Name="TextBlock3" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas3}" >
-
-                </TextBlock>
+                    <TextBlock x:Name="TextBlock3" FontSize="18" Style="{StaticResource ResourceKey=TextStyle}" Width="{Binding Path=ActualWidth,ElementName=Canvas3}" />
             </Border>
-            <xctk:DoubleUpDown x:Name="Iupdown3" FormatString="P0" Value="{Binding MoistureDP,Mode=TwoWay}" Minimum="0" Maximum="1" Width="100" Increment=".01">
-
-            </xctk:DoubleUpDown>
+            <xctk:DoubleUpDown x:Name="Iupdown3" FormatString="P0" Value="{Binding MoistureDp,Mode=TwoWay}" Minimum="0" Maximum="1" Width="100" Increment=".01" />
         </StackPanel>
     </Canvas>
-        <Button Grid.Row=" 3" FontFamily="Century Gothic" FontWeight="ExtraBold" Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Column="2" Grid.ColumnSpan="2" Click="Analyze_Click">
-            Analizuj
-        </Button>
+        <Button Grid.Row=" 3" FontFamily="Century Gothic" FontWeight="ExtraBold" Style="{StaticResource ResourceKey=ButtonStyle}" Grid.Column="2" Grid.ColumnSpan="2" Click="Analyze_Click" Content="Analyse&#xD;&#xA;"/>
     </Grid>
 </Window>

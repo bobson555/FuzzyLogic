@@ -1,17 +1,7 @@
-﻿using FuzzySets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using FuzzySets;
 
 namespace WeatherClothes.Views
 {
@@ -20,28 +10,28 @@ namespace WeatherClothes.Views
     /// Interaction logic for Options.xaml
     /// </summary>
     
-    public partial class Result : Window
+    public partial class Result
     {
-        Explaination E;
-        Attribute T;
-        Attribute W;
-        Attribute H;
-        Attribute R;
-       
-        SingleDimFuzzySet[] Sets;
+        Explaination _e;
+        readonly Attribute _t;
+        readonly Attribute _w;
+        readonly Attribute _h;
+        readonly Attribute _r;
+
+        readonly SingleDimFuzzySet[] _sets;
         public Tuple<string, string> Tata { get; set; }
         public Tuple<string, string> Mama { get; set; }
         public Tuple<string, string> Babcia { get; set; }
         public Tuple<string, string> Dziadek { get; set; }
-        double[] Values;
-        public Result(Attribute T,Attribute W,Attribute H,Attribute R,double[] Values,string[] labels,SingleDimFuzzySet[] Sets)
+        readonly double[] _values;
+        public Result(Attribute T,Attribute w,Attribute h,Attribute r,double[] values,string[] labels,SingleDimFuzzySet[] sets)
         {
-            this.Values = Values;
-            this.T = T;
-            this.W = W;
-            this.H = H;
-            this.R = R;
-            this.Sets = Sets;
+            _values = values;
+            _t = T;
+            _w = w;
+            _h = h;
+            _r = r;
+            _sets = sets;
             DataContext = this;
             Tata = GetLabelDescription(labels[0]);
             Mama = GetLabelDescription(labels[1]);
@@ -55,11 +45,11 @@ namespace WeatherClothes.Views
             switch (label.ToLower())
             {
                 case "spring":
-                    return new Tuple<string, string>("/wiosna5.png", "Ubranie Wiosenne");
+                    return new Tuple<string, string>("/wiosna5.png", "Spring Clothing");
                 case "winter":
-                    return new Tuple<string, string>("/zima5.png", "Ubranie Zimowe");
+                    return new Tuple<string, string>("/zima5.png", "Winter Clothing");
                 case "summer":
-                    return new Tuple<string, string>("/lato5.png", "Ubranie Letnie");
+                    return new Tuple<string, string>("/lato5.png", "Summer Clothing");
                 default:
                     throw new ArgumentException("Unrecognised label");
 
@@ -67,26 +57,25 @@ namespace WeatherClothes.Views
         }
         public void Initialize()
         {
-            E = new Explaination(T, W, H, R, Values,Sets);
-            E.ParentView = this;
+            _e = new Explaination(_t, _w, _h, _r, _values, _sets) {ParentView = this};
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Initialize();
-            this.Visibility = System.Windows.Visibility.Collapsed;
-            E.Show();
+            Visibility = Visibility.Collapsed;
+            _e.Show();
 
         
 
             
         }
         public Window ParentView { get; set; }
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (ParentView != null)
             {
-                ParentView.Visibility = System.Windows.Visibility.Visible;
-                ParentView.WindowState = System.Windows.WindowState.Normal;
+                ParentView.Visibility = Visibility.Visible;
+                ParentView.WindowState = WindowState.Normal;
             }
         }
         

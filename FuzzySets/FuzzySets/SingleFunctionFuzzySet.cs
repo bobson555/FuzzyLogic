@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace FuzzySets
 {
-    public class SingleFunctionFuzzySet : MultiDimFuzzySet
+    public sealed class SingleFunctionFuzzySet : MultiDimFuzzySet
     {
         /// <summary>
         /// Membership functin instance
         /// </summary>
-        public Func<IEnumerable<double>, double> FunctionFLV { get; private set; }
+        public Func<IEnumerable<double>, double> FunctionFlv { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -18,7 +18,7 @@ namespace FuzzySets
         /// <param name="dim">Dimension in which membership function is as given</param>
         public SingleFunctionFuzzySet(Func<double, double> flv, int dim = 1)
         {
-            FunctionFLV = x => flv(x.ElementAt(dim-1));
+            FunctionFlv = x => flv(x.ElementAt(dim-1));
             Dim = 1;
         }
 
@@ -29,16 +29,16 @@ namespace FuzzySets
         /// <param name="dim">Number of dimensions</param>
         public SingleFunctionFuzzySet(Func<IEnumerable<double>, double> flv, int dim)
         {
-            FunctionFLV = flv;
+            FunctionFlv = flv;
             Dim = dim;
         }
 
         public SingleFunctionFuzzySet(SingleDimFuzzySet s)
-            : this(s.FLV)
+            : this(s.Flv)
         { }
 
         public SingleFunctionFuzzySet(MultiDimFuzzySet s)
-            : this(s.FLV, s.Dim)
+            : this(s.Flv, s.Dim)
         { }
 
         /// <summary>
@@ -46,10 +46,11 @@ namespace FuzzySets
         /// </summary>
         /// <param name="value">Point which membership is to compute</param>
         /// <returns>Value of membership of given point</returns>
-        public override sealed double FLV(IEnumerable<double> value)
+        public override double Flv(IEnumerable<double> value)
         {
-            if (value.Count() != Dim) throw new ArgumentException();
-            return FunctionFLV(value);
+            var enumerable = value as IList<double> ?? value.ToList();
+            if (enumerable.Count() != Dim) throw new ArgumentException();
+            return FunctionFlv(enumerable);
         }
 
         /// <summary>

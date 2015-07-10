@@ -12,7 +12,7 @@ namespace FuzzySets
         /// </summary>
         /// <param name="value">Point which membership is to compute</param>
         /// <returns>Membership of given point</returns>
-        public abstract double FLV(IEnumerable<double> value);
+        public abstract double Flv(IEnumerable<double> value);
 
         /// <summary>
         /// Membership function. If dimensions of point and instance of this class doesn't match throws ArgumentException.
@@ -23,8 +23,9 @@ namespace FuzzySets
         {
             get
             {
-                if(value.Count() != Dim) throw new ArgumentException();
-                return FLV(value);
+                var enumerable = value as IList<double> ?? value.ToList();
+                if(enumerable.Count() != Dim) throw new ArgumentException();
+                return Flv(enumerable);
             }
         }
 
@@ -49,8 +50,9 @@ namespace FuzzySets
             var dim = s1.Dim + s2.Dim;
             Func<IEnumerable<double>, double> flv = x =>
             {
-                if (x.Count()!= dim) throw new ArgumentException();
-                return Norms.ApplyTNorm(s1.FLV(x.Take(s1.Dim)), s2.FLV(x.Skip(s1.Dim)));
+                var enumerable = x as IList<double> ?? x.ToList();
+                if (enumerable.Count()!= dim) throw new ArgumentException();
+                return Norms.ApplyTNorm(s1.Flv(enumerable.Take(s1.Dim)), s2.Flv(enumerable.Skip(s1.Dim)));
             };
             return new SingleFunctionFuzzySet(flv, dim);
         }
@@ -62,7 +64,7 @@ namespace FuzzySets
         /// <returns>Fuzzy set which is complementary to input fuzzy set</returns>
         public static MultiDimFuzzySet Complement(MultiDimFuzzySet s)
         {
-            return new SingleFunctionFuzzySet(x => 1 - s.FLV(x), s.Dim);
+            return new SingleFunctionFuzzySet(x => 1 - s.Flv(x), s.Dim);
         }
 
         /// <summary>
@@ -75,7 +77,11 @@ namespace FuzzySets
         public static MultiDimFuzzySet Intersection(MultiDimFuzzySet s1, MultiDimFuzzySet s2, Norm norm = Norm.Zadeh)
         {
             if (s1.Dim != s2.Dim) throw new ArgumentException();
-            return new SingleFunctionFuzzySet(x => Norms.ApplyTNorm(s1.FLV(x), s2.FLV(x), norm), s1.Dim);
+            return new SingleFunctionFuzzySet(x =>
+            {
+                var enumerable = x as IList<double> ?? x.ToList();
+                return Norms.ApplyTNorm(s1.Flv(enumerable), s2.Flv(enumerable), norm);
+            }, s1.Dim);
         }
 
         /// <summary>
@@ -88,7 +94,11 @@ namespace FuzzySets
         public static MultiDimFuzzySet Union(MultiDimFuzzySet s1, MultiDimFuzzySet s2, Norm norm = Norm.Zadeh)
         {
             if (s1.Dim != s2.Dim) throw new ArgumentException();
-            return new SingleFunctionFuzzySet(x => Norms.ApplySNorm(s1.FLV(x), s2.FLV(x), norm), s1.Dim);
+            return new SingleFunctionFuzzySet(x =>
+            {
+                var enumerable = x as IList<double> ?? x.ToList();
+                return Norms.ApplySNorm(s1.Flv(enumerable), s2.Flv(enumerable), norm);
+            }, s1.Dim);
         }
 
         /// <summary>

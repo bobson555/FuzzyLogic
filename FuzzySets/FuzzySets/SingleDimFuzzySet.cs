@@ -12,7 +12,7 @@ namespace FuzzySets
         /// <returns>This class instance conversed to FuzzySet</returns>
         public FuzzySet ToFuzzySet()
         {
-            return new FuzzySet(FLV);
+            return new FuzzySet(Flv);
         }
 
         /// <summary>
@@ -20,16 +20,17 @@ namespace FuzzySets
         /// </summary>
         /// <param name="value">Value which membership is to compute</param>
         /// <returns>Membership of given value</returns>
-        public abstract double FLV(double value);
+        public abstract double Flv(double value);
 
         /// <summary>
         /// Membership function. Throws exception if input point has more than 1 dimension.
         /// </summary>
         /// <param name="value">Point which membership is to compute</param>
         /// <returns>Membership of given point</returns>
-        public override double FLV(IEnumerable<double> value)
+        public override double Flv(IEnumerable<double> value)
         {
-            if (value.Count() == 1) return FLV(value.First());
+            var enumerable = value as IList<double> ?? value.ToList();
+            if (enumerable.Count() == 1) return Flv(enumerable.First());
             throw new ArgumentException();
         }
 
@@ -42,7 +43,7 @@ namespace FuzzySets
         {
             get
             {
-                return FLV(value);
+                return Flv(value);
             }
         }
 
@@ -55,7 +56,7 @@ namespace FuzzySets
         /// <returns>Intersection of input sets</returns>
         public static SingleDimFuzzySet Intersection(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm = Norm.Zadeh)
         {
-            return new FuzzySet(x => Norms.ApplyTNorm(s1.FLV(x), s2.FLV(x), norm));
+            return new FuzzySet(x => Norms.ApplyTNorm(s1.Flv(x), s2.Flv(x), norm));
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace FuzzySets
         /// <returns>Union of input sets</returns>
         public static SingleDimFuzzySet Union(SingleDimFuzzySet s1, SingleDimFuzzySet s2, Norm norm = Norm.Zadeh)
         {
-            return new FuzzySet(x=> Norms.ApplySNorm(s1.FLV(x), s2.FLV(x), norm));
+            return new FuzzySet(x=> Norms.ApplySNorm(s1.Flv(x), s2.Flv(x), norm));
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace FuzzySets
         /// <returns>Fuzzy set which is complementary to input fuzzy set</returns>
         public static SingleDimFuzzySet Complement(SingleDimFuzzySet s)
         {
-            return new FuzzySet(x => 1-s.FLV(x));
+            return new FuzzySet(x => 1-s.Flv(x));
         }
 
         /// <summary>

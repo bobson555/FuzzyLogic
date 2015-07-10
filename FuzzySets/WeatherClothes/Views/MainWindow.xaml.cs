@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WeatherClothes.Views;
-namespace WeatherClothes
+
+namespace WeatherClothes.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         public MainWindow()
         {
@@ -29,19 +17,19 @@ namespace WeatherClothes
 
         private void Button2_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Game g = new Game();
-            this.Visibility = Visibility.Collapsed;
+            Visibility = Visibility.Collapsed;
             g.ParentView = this;
             g.Show();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             Application.Current.Shutdown();
         }

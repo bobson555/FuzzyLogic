@@ -1,87 +1,78 @@
-﻿using FuzzySets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using FuzzySets;
+using MathNet.Numerics.Integration;
 
 namespace WeatherClothes.Views
 {
     /// <summary>
     /// Interaction logic for Game.xaml
     /// </summary>
-    public partial class Game : Window, INotifyPropertyChanged
+    public partial class Game : INotifyPropertyChanged
     {
-        Attribute Temperature;
-        Attribute Humidity;
-        Attribute WindSpeed;
-        Attribute Clothes;
-        int[, ,] Rules;
-        int[, ,] RulesR;
+        Attribute _temperature;
+        Attribute _humidity;
+        Attribute _windSpeed;
+        Attribute _clothes;
+        int[, ,] _rules;
+
         #region DependecyProperties
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
-        public double TemperatureDP
+        public double TemperatureDp
         {
             get
             {
-                return (double)GetValue(TemperatureDPProperty);
+                return (double)GetValue(TemperatureDpProperty);
             }
             set
             {
-                SetValue(TemperatureDPProperty, value); OnPropertyChanged("TemperatureDP");
+                SetValue(TemperatureDpProperty, value); OnPropertyChanged("TemperatureDp");
             }
         }
 
         // Using a DependencyProperty as the backing store for TemperatureDP.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty TemperatureDPProperty =
-            DependencyProperty.Register("TemperatureDP", typeof(double), typeof(Game));
+        public static readonly DependencyProperty TemperatureDpProperty =
+            DependencyProperty.Register("TemperatureDp", typeof(double), typeof(Game));
 
-        public double MoistureDP
+        public double MoistureDp
         {
-            get { return (double)GetValue(MoistureDPProperty); }
-            set { SetValue(MoistureDPProperty, value); OnPropertyChanged("MoistureDP"); }
+            get { return (double)GetValue(MoistureDpProperty); }
+            set { SetValue(MoistureDpProperty, value); OnPropertyChanged("MoistureDp"); }
         }
 
         // Using a DependencyProperty as the backing store for MoistureDP.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty MoistureDPProperty =
-            DependencyProperty.Register("MoistureDP", typeof(double), typeof(Game));
+        public static readonly DependencyProperty MoistureDpProperty =
+            DependencyProperty.Register("MoistureDp", typeof(double), typeof(Game));
 
-        public double WindSpeedDP
+        public double WindSpeedDp
         {
-            get { return (double)GetValue(WindSpeedDPProperty); }
-            set { SetValue(WindSpeedDPProperty, value); OnPropertyChanged("WindSpeedDP"); }
+            get { return (double)GetValue(WindSpeedDpProperty); }
+            set { SetValue(WindSpeedDpProperty, value); OnPropertyChanged("WindSpeedDp"); }
         }
 
         // Using a DependencyProperty as the backing store for WindSpeedDP.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty WindSpeedDPProperty =
-            DependencyProperty.Register("WindSpeedDP", typeof(double), typeof(Game));
+        public static readonly DependencyProperty WindSpeedDpProperty =
+            DependencyProperty.Register("WindSpeedDp", typeof(double), typeof(Game));
 
         #endregion
 
         public Game()
         {
-            TemperatureDP = 0;
-            WindSpeedDP = 0;
-            MoistureDP = 0;
+            TemperatureDp = 0;
+            WindSpeedDp = 0;
+            MoistureDp = 0;
             InitializeComponent();
-            TextBlock1.Text = "Temperatura\notoczenia";
-            TextBlock2.Text = "Prędkość\nwiatru";
-            TextBlock3.Text = "Wilgotność\npowietrza";
+            TextBlock1.Text = "Outside\nTemperature";
+            TextBlock2.Text = "Wind\nSpeed";
+            TextBlock3.Text = "Air\nHumidity";
 
-            this.DataContext = this;
+            DataContext = this;
 
             InitializeAttributes();
         }
@@ -116,13 +107,13 @@ namespace WeatherClothes.Views
             var winterFSet = new RightShoulderFuzzySet(0.4, 3F / 5F, double.PositiveInfinity, 1);
             var clothesSets = new List<FuzzySet> { summerFSet.ToFuzzySet(), springFSet.ToFuzzySet(), winterFSet.ToFuzzySet() };
 
-            Temperature = new Attribute(temperatureList, temperatureSets);
-            WindSpeed = new Attribute(windSpeedList, windSets);
-            Humidity = new Attribute(moistureList, moistureSets);
-            Clothes = new Attribute(clothesList, clothesSets);
+            _temperature = new Attribute(temperatureList, temperatureSets);
+            _windSpeed = new Attribute(windSpeedList, windSets);
+            _humidity = new Attribute(moistureList, moistureSets);
+            _clothes = new Attribute(clothesList, clothesSets);
 
 
-            Rules = new int[,,]
+            _rules = new[,,]
             {
                 {{2,0,0},{2,1,0},{2,1,1}},
                 {{2,1,0},{2,1,0},{2,2,1}},
@@ -138,22 +129,22 @@ namespace WeatherClothes.Views
         /// <param name="e"></param>
         private void Analyze_Click(object sender, RoutedEventArgs e)
         {
-            var temperatureArr = Temperature[TemperatureDP];
-            var moistureArr = Humidity[MoistureDP];
-            var windSpeedArr = WindSpeed[WindSpeedDP];
+            var temperatureArr = _temperature[TemperatureDp];
+            var moistureArr = _humidity[MoistureDp];
+            var windSpeedArr = _windSpeed[WindSpeedDp];
 
-            var input = new double[][] { temperatureArr, moistureArr, windSpeedArr };
-            double[] Values = new double[4];
-            SingleDimFuzzySet[] Sets = new SingleDimFuzzySet[4];
-            var tata = GetOpinion(input, out Values[0], out Sets[0], Norm.Zadeh);
-            var mama = GetOpinion(input, out Values[1], out Sets[1], Norm.Algebraic);
-            var babcia = GetOpinion(input, out Values[2], out Sets[2], Norm.Lukasiewicz);
-            var dziadek = GetOpinion(input, out Values[3], out Sets[3], Norm.Einstein);
+            var input = new[] { temperatureArr, moistureArr, windSpeedArr };
+            double[] values = new double[4];
+            SingleDimFuzzySet[] sets = new SingleDimFuzzySet[4];
+            var tata = GetOpinion(input, out values[0], out sets[0]);
+            var mama = GetOpinion(input, out values[1], out sets[1], Norm.Algebraic);
+            var babcia = GetOpinion(input, out values[2], out sets[2], Norm.Lukasiewicz);
+            var dziadek = GetOpinion(input, out values[3], out sets[3], Norm.Einstein);
 
-            Result R = new Result(Temperature, WindSpeed, Humidity, Clothes, new[] { TemperatureDP, MoistureDP, WindSpeedDP, Values[0], Values[1], Values[2], Values[3] }, new[] { tata, mama, babcia, dziadek }, Sets);
-            this.Visibility = System.Windows.Visibility.Collapsed;
-            R.ParentView = this;
-            R.Show();
+            Result r = new Result(_temperature, _windSpeed, _humidity, _clothes, new[] { TemperatureDp, MoistureDp, WindSpeedDp, values[0], values[1], values[2], values[3] }, new[] { tata, mama, babcia, dziadek }, sets);
+            Visibility = Visibility.Collapsed;
+            r.ParentView = this;
+            r.Show();
 
         }
         public Window ParentView { get; set; }
@@ -168,40 +159,40 @@ namespace WeatherClothes.Views
         /// <returns></returns>
         private String GetOpinion(double[][] input, out double crispValue, out SingleDimFuzzySet clothesResult, Norm norm = Norm.Zadeh)
         {
-            var RuleValueSets = CalculateRuleValues(input, norm);
-            var ClothesResults = CalculateResultFuzzySets(RuleValueSets, norm);
-            var ClothesResult = ClothesResults[0].UnionWith(ClothesResults[1].UnionWith(ClothesResults[2], norm), norm);
-            var r1 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => x * ClothesResult[x], 0, 1, 42);
-            var r2 = MathNet.Numerics.Integration.SimpsonRule.IntegrateComposite(x => ClothesResult[x], 0, 1, 42);
-            crispValue = r2 == 0 ? 0.5 : r1 / r2; //Środek ciężkości wynikowego zbioru
-            clothesResult = ClothesResult;
-            return Clothes.GetMaxLabel(crispValue, new double[] { ClothesResults[0][crispValue], ClothesResults[1][crispValue], ClothesResults[2][crispValue] }, norm);
+            var ruleValueSets = CalculateRuleValues(input, norm);
+            var clothesResults = CalculateResultFuzzySets(ruleValueSets, norm);
+            var integratedClothesResult = clothesResults[0].UnionWith(clothesResults[1].UnionWith(clothesResults[2], norm), norm);
+            var r1 = SimpsonRule.IntegrateComposite(x => x * integratedClothesResult[x], 0, 1, 42);
+            var r2 = SimpsonRule.IntegrateComposite(x => integratedClothesResult[x], 0, 1, 42);
+            crispValue = r2.CompareTo(0)==0 ? 0.5 : r1 / r2; //Środek ciężkości wynikowego zbioru
+            clothesResult = integratedClothesResult;
+            return _clothes.GetMaxLabel(crispValue, new[] { clothesResults[0][crispValue], clothesResults[1][crispValue], clothesResults[2][crispValue] }, norm);
         }
 
         /// <summary>
         /// Calculate output fuzzy set.
         /// </summary>
-        /// <param name="RuleValueSets"></param>
+        /// <param name="ruleValueSets"></param>
         /// <param name="norm"></param>
         /// <returns></returns>
-        private FuzzySet[] CalculateResultFuzzySets(FuzzySet[, ,] RuleValueSets, Norm norm = Norm.Zadeh)
+        private FuzzySet[] CalculateResultFuzzySets(FuzzySet[, ,] ruleValueSets, Norm norm = Norm.Zadeh)
         {
-            var rfs = new FuzzySet[] { new FuzzySet(Clothes.GetFuzzySet(0)), new FuzzySet(Clothes.GetFuzzySet(1)), new FuzzySet(Clothes.GetFuzzySet(2)) };
-            bool[] Modified = new[] { false, false, false };
+            var rfs = new[] { new FuzzySet(_clothes.GetFuzzySet(0)), new FuzzySet(_clothes.GetFuzzySet(1)), new FuzzySet(_clothes.GetFuzzySet(2)) };
+            bool[] modified = { false, false, false };
             for (int a = 0; a < 3; a++)
                 for (int b = 0; b < 3; b++)
                     for (int c = 0; c < 3; c++)
                     {
-                        if (RuleValueSets[a, b, c] == null) continue;
-                        var ind = Rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
-                        rfs[ind] = rfs[ind].IntersectWith(RuleValueSets[a, b, c], norm).ToFuzzySet();
-                        Modified[ind] = true;
+                        if (ruleValueSets[a, b, c] == null) continue;
+                        var ind = _rules[a, b, c]; //indeks ClothesSetu będącego po prawej stronie implikacji w Rules
+                        rfs[ind] = rfs[ind].IntersectWith(ruleValueSets[a, b, c], norm).ToFuzzySet();
+                        modified[ind] = true;
                     }
             for (int i = 0; i < 3; i++)
             {
-                if (!Modified[i])
+                if (!modified[i])
                 {
-                    rfs[i] = rfs[i].IntersectWith(new FuzzySet(0), norm).ToFuzzySet();
+                    rfs[i] = rfs[i].IntersectWith(new FuzzySet(), norm).ToFuzzySet();
                 }
             }
             return rfs;
@@ -219,11 +210,11 @@ namespace WeatherClothes.Views
             for (int tInd = 0; tInd < 3; tInd++)
             {
                  var tVal = input[0][tInd];
-                 if (tVal == 0) continue;
+                 if (tVal.CompareTo(0)==0) continue;
                  for (int mInd = 0; mInd < 3; mInd++)
                  {
                      var mVal = input[1][mInd];
-                     if (mVal == 0) continue;
+                     if (mVal.CompareTo(0) == 0) continue;
                      for (int wInd = 0; wInd < 3; wInd++)
                      {
                          //var tVal = Temperature.GetAttributeValue(tInd, input[0][tInd]);
@@ -232,7 +223,7 @@ namespace WeatherClothes.Views
 
 
                          var wVal = input[2][wInd];
-                         if (tVal == 0 || mVal == 0 || wVal == 0) continue;
+                         if (wVal.CompareTo(0) == 0) continue;
                          //var t = tVal == 0 ? 1 : tVal;
                          //var m = mVal == 0 ? 1 : mVal;
                          //var w = wVal == 0 ? 1 : wVal;
@@ -248,7 +239,7 @@ namespace WeatherClothes.Views
 
         private void Window_Closing_1(object sender, CancelEventArgs e)
         {
-            if (ParentView != null) ParentView.Visibility = System.Windows.Visibility.Visible;
+            if (ParentView != null) ParentView.Visibility = Visibility.Visible;
         }
     }
 }

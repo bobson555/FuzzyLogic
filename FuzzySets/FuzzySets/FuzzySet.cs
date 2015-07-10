@@ -6,57 +6,53 @@ namespace FuzzySets
 {
     public class FuzzySet:SingleDimFuzzySet
     {
-        public Func<double, double> FunctionFLV { get; private set; }
+        public Func<double, double> FunctionFlv { get; private set; }
 
-        public override double FLV(double value)
+        public override double Flv(double value)
         {
-            return FunctionFLV(value);
+            return FunctionFlv(value);
         }
 
         public FuzzySet(double val = 0)
         {
-            FunctionFLV = x => val;
+            FunctionFlv = x => val;
         }
 
         public FuzzySet(Func<double, double> flv)
         {
-            FunctionFLV = flv;
+            FunctionFlv = flv;
         }
-
-        public FuzzySet() : this(0)
-        {
-        }
-
         public FuzzySet(MultiDimFuzzySet s)
         {
             if (s.Dim!=1) throw new InvalidCastException();
             var l = new List<double>();
             for (int i = 1; i < s.Dim; i++) l.Add(0);
-            FunctionFLV = x =>
+            FunctionFlv = x =>
             {
                 var l2 = new List<double> {x};
                 l2.AddRange(l);
-                return s.FLV(l2);
+                return s.Flv(l2);
             };
         }
 
         public FuzzySet(MultiDimFuzzySet s, IEnumerable<double> offset, int dim)
         {
             //var l = new List<double>();
-            if (offset.Count() != s.Dim || dim >= s.Dim || dim < 0) throw new ArgumentException();
-            var l = offset.Select(x => -x).ToArray();
-            FunctionFLV = x =>
+            var enumerable = offset as IList<double> ?? offset.ToList();
+            if (enumerable.Count() != s.Dim || dim >= s.Dim || dim < 0) throw new ArgumentException();
+            var l = enumerable.Select(x => -x).ToArray();
+            FunctionFlv = x =>
             {
                 var l2 = new double[l.Length];
                 l.CopyTo(l2, 0);
                 l2[dim] += x;
-                return s.FLV(l2);
+                return s.Flv(l2);
             };
         }
 
         public FuzzySet(SingleDimFuzzySet fuzzySet)
         {
-            FunctionFLV = fuzzySet.FLV;
+            FunctionFlv = fuzzySet.Flv;
         }
 
         /// <summary>
@@ -66,7 +62,7 @@ namespace FuzzySets
         /// <param name="s2">Fuzzy set to compute</param>
         /// <param name="norm">T-Norm to be used in computing intersection of given sets</param>
         /// <returns>Intersection of input sets</returns>
-        public new static FuzzySet Intersection(FuzzySet s1, FuzzySet s2, Norm norm = Norm.Zadeh)
+        public static FuzzySet Intersection(FuzzySet s1, FuzzySet s2, Norm norm = Norm.Zadeh)
         {
             return (FuzzySet) SingleDimFuzzySet.Intersection(s1, s2, norm);
         }

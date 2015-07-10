@@ -1,22 +1,22 @@
-﻿using FuzzySets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FuzzySets;
 
 namespace WeatherClothes
 {
     public class Attribute
     {
-        List<String> labels;
-        List<FuzzySet> attributes;
-
+        readonly List<String> _labels;
+        readonly List<FuzzySet> _attributes;
+        private const double ComparisonTolerance = 10*Double.Epsilon;
         public Attribute(IEnumerable<String> labels, IEnumerable<FuzzySet> attributes)
         {
-            if(labels.Count() != attributes.Count()) throw new ArgumentException();
-            this.labels = labels.ToList();
-            this.attributes = attributes.ToList();
+            var enumerable = labels as string[] ?? labels.ToArray();
+            var fuzzySets = attributes as FuzzySet[] ?? attributes.ToArray();
+            if(enumerable.Count() != fuzzySets.Count()) throw new ArgumentException();
+            _labels = enumerable.ToList();
+            _attributes = fuzzySets.ToList();
         }
 
         /// <summary>
@@ -49,12 +49,7 @@ namespace WeatherClothes
         /// <returns>Array of values of membership functions</returns>
         public double[] GetValues(double value)
         {
-            var l = new List<double>();
-            foreach (String s in labels)
-            {
-                l.Add(GetAttributeValue(s, value));
-            }
-            return l.ToArray();
+            return _labels.Select(s => GetAttributeValue(s, value)).ToArray();
         }
 
         /// <summary>
@@ -75,7 +70,7 @@ namespace WeatherClothes
         /// <returns>Fuzzy set at given index</returns>
         public FuzzySet GetFuzzySet(int index)
         {
-            return attributes[index];
+            return _attributes[index];
         }
 
         /// <summary>
@@ -85,7 +80,7 @@ namespace WeatherClothes
         /// <returns>Fuzzy set labeled as input value</returns>
         public FuzzySet GetFuzzySet(String label)
         {
-            var s = labels.IndexOf(label);
+            var s = _labels.IndexOf(label);
             if (s == -1) throw new ArgumentException("Label not found");
             return GetFuzzySet(s);
         }
@@ -99,29 +94,29 @@ namespace WeatherClothes
         /// <returns>Label of a fuzzy set in which membership funtction reaches highest value</returns>
         public String GetMaxLabel(double val, double[] weights, Norm norm = Norm.Zadeh)
         {
-            if (weights.Count() != labels.Count()) throw new ArgumentException();
+            if (weights.Count() != _labels.Count()) throw new ArgumentException();
             String reslabel=null;
             var res = double.NegativeInfinity;
             int resid = -1;
-            for (int i = 0; i < attributes.Count; i++)
+            for (int i = 0; i < _attributes.Count; i++)
             {
-                var fset = attributes[i].IntersectWith(new FuzzySet(weights[i]), norm);
+                var fset = _attributes[i].IntersectWith(new FuzzySet(weights[i]), norm);
                 var fval = fset[val];
                 if (fval > res)
                 {
-                    reslabel = labels[i];
+                    reslabel = _labels[i];
                     res = fval;
                     resid = i;
                 }
-                else if (fval == res && attributes[i][val] > attributes[resid][val])
+                else if (Math.Abs(fval - res) < ComparisonTolerance && _attributes[i][val] > _attributes[resid][val])
                 {
-                    reslabel = labels[i];
+                    reslabel = _labels[i];
                     res = fval;
                     resid = i;
                 }
-                else if (fset[val] == res && weights[i] > weights[resid])
+                else if (Math.Abs(fset[val] - res) < ComparisonTolerance && weights[i] > weights[resid])
                 {
-                    reslabel = labels[i];
+                    reslabel = _labels[i];
                     res = fset[val];
                     resid = i;
                 }
@@ -138,7 +133,7 @@ namespace WeatherClothes
         /// <returns>Label at the given index</returns>
         public string GetLabel(int i)
         {
-            return labels[i];
+            return _labels[i];
         }
     }
 }
